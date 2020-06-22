@@ -1,0 +1,21 @@
+package com.cucumber.model;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+@Entity
+public class Product {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+    private boolean active;
+    private float cost;
+
+    private User seller;
+
+    private ProductDescription productDescription;
+
+}
