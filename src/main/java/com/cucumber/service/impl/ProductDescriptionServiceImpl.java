@@ -35,4 +35,9 @@ public class ProductDescriptionServiceImpl implements ProductDescriptionService 
     public void delete(Long id) {
         productDescriptionRepository.deleteById(id);
     }
+
+    @Override
+    public ProductDescription getProductDescriptionByModelName(String modelName) {
+        return productDescriptionRepository.findByModelName(modelName);
+    }
 }

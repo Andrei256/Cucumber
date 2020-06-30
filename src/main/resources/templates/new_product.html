@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Создать товар</title>
+</head>
+<body>
+    <div align="center">
+        <h2>Введите данные</h2>
+        <form action="#" th:action="@{/product/save}" th:object="${productDescription}" method="post" enctype="multipart/form-data">
+            <table border="1" cellpadding="10">
+                <tr>
+                    <td>Изображение:</td>
+                    <td><input type="file" th:name="file"></td>
+                </tr>
+                <tr>
+                    <td>Категория:</td>
+                    <td>
+                    <select name="category" size="1">
+                        <option disabled>Выберите категорию</option>
+                        <option th:each="category : ${categories}" th:value="${category}" th:text="${category.name}"></option>
+                    </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Модель:</td>
+                    <td><input type="text" th:field="*{modelName}"></td>
+                </tr>
+                <tr>
+                    <td>Производитель:</td>
+                    <td><input type="text" th:field="*{manufacturer}"></td>
+                </tr>
+                <tr>
+                    <td>Описание:</td>
+                    <td><textarea rows="10" cols="45" th:field="*{description}"></textarea></td>
+                </tr>
+                <tr>
+                    <td>Стоимость:</td>
+                    <td><input type="text" name="cost"></td>
+                </tr>
+                <tr>
+                    <td><input type="submit" value="Создать"></td>
+                </tr>
+            </table>
+        </form>
+    </div>
+</body>
+</html>

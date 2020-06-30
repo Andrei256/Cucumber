@@ -2,25 +2,35 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Product List</title>
+    <title>Список товаров</title>
 </head>
 <body>
     <div align="center">
         <table border="1" cellpadding="10">
-            <thead>
-                <tr>
-                    <th>
+<!--            <thead>-->
+<!--                <tr>-->
+<!--                    <th>-->
 
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="product : ${listProducts}">
-                    <td>
-                        <a th:href="@{'/product/' + ${product.id}}" th:text="${product.productDescription.getName()}">Name</a>
+<!--                    </th>-->
+<!--                </tr>-->
+<!--            </thead>-->
+<!--            <tbody>-->
+                <tr th:each="product : ${productDescriptions}">
+                    <td th:if="${product.filename != null}">
+                        <img th:src="@{'/img/' + ${product.filename}}">
                     </td>
+                    <td th:if="${product.filename == null}">
+                        <img th:src="@{'/img/noPhoto.png'}">
+                    </td>
+                    <td>
+                        <a th:href="@{'/product/' + ${product.id}}" th:text="${product.modelName}">Name</a>
+                        <p th:text="${product.description}">Text</p>
+                    </td>
+<!--                    <td>-->
+<!--                        <a th:text="${product.category.name}">Name</a>-->
+<!--                    </td>-->
                 </tr>
-            </tbody>
+<!--            </tbody>-->
         </table>
 
     </div>

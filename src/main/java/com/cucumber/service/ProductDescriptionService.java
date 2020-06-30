@@ -9,4 +9,5 @@ public interface ProductDescriptionService {
     List<ProductDescription> getAll();
     ProductDescription get(Long id);
     void delete(Long id);
+    ProductDescription getProductDescriptionByModelName(String modelName);
 }

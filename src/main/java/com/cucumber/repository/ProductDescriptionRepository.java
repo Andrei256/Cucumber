@@ -4,4 +4,6 @@ import com.cucumber.model.ProductDescription;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ProductDescriptionRepository extends JpaRepository<ProductDescription, Long> {
+
+    ProductDescription findByModelName(String modelName);
 }

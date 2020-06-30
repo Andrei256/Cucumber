@@ -1,12 +1,15 @@
 package com.cucumber.model;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -30,14 +33,17 @@ public class User implements UserDetails {
     @Column(name = "activation_code")
     private String activationCode;
 
-    @ManyToMany(mappedBy = "sellers")
+    @EqualsAndHashCode.Exclude
+    @ManyToMany(mappedBy = "sellers", fetch = FetchType.EAGER)
     private Set<Product> products;
 
-    @OneToMany(mappedBy = "buyer")
+    @EqualsAndHashCode.Exclude
+    @OneToMany(mappedBy = "buyer", fetch = FetchType.EAGER)
     private Set<Order> ordersForBuyer;
 
+/*    @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "seller")
-    private Set<Order> ordersForSeller;
+    private Set<Order> ordersForSeller;*/
 
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))

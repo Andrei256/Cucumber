@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <title>Регистрация</title>
+</head>
+<h2 align="center">Зарегистрируйтесь</h2>
+<body>
+    <div align="center">
+        <form th:action="@{/user/registration}" method="post">
+            <p><input type="text" name="username" placeholder="Имя пользователя"></p>
+            <p><input type="email" name="email" placeholder="some@some.com"></p>
+            <p><input type="password" name="password" placeholder="Пароль"></p>
+            <p><input type="submit" value="Регистрация"></p>
+            <p><a href="/login">Авторизироваться</a></p>
+        </form>
+    </div>
+</body>
+</html>
