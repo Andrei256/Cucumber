@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${productDescription.modelName}"></title>
+</head>
+<body>
+<h2 th:text="${productDescription.modelName}"></h2>
+    <table>
+        <tr>
+            <td></td>
+            <td th:if="${productDescription.filename != null}">
+                <img th:src="@{'/img/' + ${productDescription.filename}}">
+            </td>
+            <td th:if="${productDescription.filename == null}">
+                <img th:src="@{'/img/noPhoto.png'}">
+            </td>
+        </tr>
+        <tr>
+            <td>Производитель:</td>
+            <td th:text="${productDescription.manufacturer}"></td>
+        </tr>
+        <tr>
+            <td>Описание:</td>
+            <td th:text="${productDescription.description}"></td>
+        </tr>
+    </table>
+<p>Предложения продавцов</p>
+<table>
+    <tr th:each="product : ${productDescription.products}">
+        <td>
+            <p th:text="${product.seller.username}"></p>
+        </td>
+        <td>
+            <p th:text="${product.seller.text}"></p>
+        </td>
+        <td>
+            <p th:text="${product.cost}"></p>
+            <form th:action="@{'/basket/' + ${product.id}}" method="post">
+                <input type="hidden" name="id" th:value="${product.id}">
+                <input type="submit" value="В корзину">
+            </form>
+<!--            <button >В корзину</button>-->
+        </td>
+        <td>
+            <p>Контакты</p>
+            <p th:text="${product.seller.phoneNumber}"></p>
+            <p th:text="${product.seller.email}"></p>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

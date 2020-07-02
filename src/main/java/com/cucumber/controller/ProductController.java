@@ -12,10 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Controller
 @RequestMapping("/product")
@@ -28,7 +25,7 @@ public class ProductController {
     private ProductService productService;
 
     @GetMapping
-    public String showListProducts(Model model) {
+    public String showListProductsPage(Model model) {
         List<ProductDescription> productDescriptions = productDescriptionService.getAll();
         model.addAttribute("productDescriptions", productDescriptions);
         return "list_products";
@@ -45,21 +42,21 @@ public class ProductController {
             @AuthenticationPrincipal User seller,
             @ModelAttribute("product") ProductDescription productDescription,
             @ModelAttribute("cost") float cost
-//            @RequestParam("category") Category category
             ) {
         if (productDescriptionService.getProductDescriptionByModelName(productDescription.getModelName()) == null) {
-            System.out.println("Hello");
             Product product = new Product();
             product.setCost(cost);
-//            List<User> sellers = new ArrayList<>();
-            Set<User> sellers = new HashSet<>();
-            sellers.add(seller);
-//            productDescription.setCategory(category);
             product.setProductDescription(productDescription);
+            product.setSeller(seller);
             productDescriptionService.save(productDescription);
-            product.setSellers(sellers);
             productService.save(product);
         }
         return "redirect:/product";
+    }
+    @GetMapping("/{id}")
+    public String showProductPage(@PathVariable(name = "id") long id, Model model) {
+        ProductDescription productDescription = productDescriptionService.get(id);
+        model.addAttribute("productDescription", productDescription);
+        return "product_page";
     }
 }

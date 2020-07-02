@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -23,8 +22,9 @@ public class ProductDescription {
     private String manufacturer;
     private String description;
     private String filename;
+    private boolean active;
 
     @EqualsAndHashCode.Exclude
-    @OneToMany(mappedBy = "productDescription")
+    @OneToMany(mappedBy = "productDescription", cascade = CascadeType.ALL)
     private Set<Product> products;
 }

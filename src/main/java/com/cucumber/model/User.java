@@ -34,7 +34,7 @@ public class User implements UserDetails {
     private String activationCode;
 
     @EqualsAndHashCode.Exclude
-    @ManyToMany(mappedBy = "sellers", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "seller", fetch = FetchType.EAGER)
     private Set<Product> products;
 
     @EqualsAndHashCode.Exclude

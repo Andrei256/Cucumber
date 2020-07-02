@@ -7,30 +7,18 @@
 <body>
     <div align="center">
         <table border="1" cellpadding="10">
-<!--            <thead>-->
-<!--                <tr>-->
-<!--                    <th>-->
-
-<!--                    </th>-->
-<!--                </tr>-->
-<!--            </thead>-->
-<!--            <tbody>-->
-                <tr th:each="product : ${productDescriptions}">
-                    <td th:if="${product.filename != null}">
-                        <img th:src="@{'/img/' + ${product.filename}}">
+                <tr th:each="productDesc : ${productDescriptions}">
+                    <td th:if="${productDesc.filename != null}">
+                        <img th:src="@{'/img/' + ${productDesc.filename}}">
                     </td>
-                    <td th:if="${product.filename == null}">
+                    <td th:if="${productDesc.filename == null}">
                         <img th:src="@{'/img/noPhoto.png'}">
                     </td>
                     <td>
-                        <a th:href="@{'/product/' + ${product.id}}" th:text="${product.modelName}">Name</a>
-                        <p th:text="${product.description}">Text</p>
+                        <a th:href="@{'/product/' + ${productDesc.id}}" th:text="${productDesc.modelName}">Name</a>
+                        <p th:text="${productDesc.description}">Text</p>
                     </td>
-<!--                    <td>-->
-<!--                        <a th:text="${product.category.name}">Name</a>-->
-<!--                    </td>-->
                 </tr>
-<!--            </tbody>-->
         </table>
 
     </div>
