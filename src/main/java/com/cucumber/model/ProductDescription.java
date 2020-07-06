@@ -5,8 +5,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Data
@@ -26,5 +25,5 @@ public class ProductDescription {
 
     @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "productDescription", cascade = CascadeType.ALL)
-    private Set<Product> products;
+    private List<Product> products;
 }

@@ -27,12 +27,12 @@ public class ProductDescriptionServiceImpl implements ProductDescriptionService 
     }
 
     @Override
-    public ProductDescription get(Long id) {
+    public ProductDescription get(long id) {
         return productDescriptionRepository.findById(id).get();
     }
 
     @Override
-    public void delete(Long id) {
+    public void delete(long id) {
         productDescriptionRepository.deleteById(id);
     }
 

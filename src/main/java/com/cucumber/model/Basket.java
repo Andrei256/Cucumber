@@ -4,9 +4,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Data
@@ -24,6 +23,6 @@ public class Basket {
     private User buyer;
 
     @OneToMany
-    @JoinColumn(name = "product_id")
-    private Set<Product> products = new HashSet<>();
+//    @JoinColumn(name = "product_id")
+    private List<Product> products = new ArrayList<>();
 }

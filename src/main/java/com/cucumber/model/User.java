@@ -8,7 +8,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -33,17 +32,20 @@ public class User implements UserDetails {
     @Column(name = "activation_code")
     private String activationCode;
 
-    @EqualsAndHashCode.Exclude
-    @OneToMany(mappedBy = "seller", fetch = FetchType.EAGER)
-    private Set<Product> products;
+    @OneToOne(mappedBy = "buyer")
+    private Basket basket;
 
     @EqualsAndHashCode.Exclude
-    @OneToMany(mappedBy = "buyer", fetch = FetchType.EAGER)
-    private Set<Order> ordersForBuyer;
+    @OneToMany(mappedBy = "seller")
+    private List<Product> products;
+
+    @EqualsAndHashCode.Exclude
+    @OneToMany(mappedBy = "buyer")
+    private List<Order> ordersForBuyer;
 
 /*    @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "seller")
-    private Set<Order> ordersForSeller;*/
+    private List<Order> ordersForSeller;*/
 
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))

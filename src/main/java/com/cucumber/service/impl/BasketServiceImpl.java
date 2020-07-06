@@ -27,12 +27,17 @@ public class BasketServiceImpl implements BasketService {
     }
 
     @Override
-    public Basket get(Long id) {
+    public Basket get(long id) {
         return basketRepository.findById(id).get();
     }
 
     @Override
-    public void delete(Long id) {
+    public void delete(long id) {
         basketRepository.deleteById(id);
+    }
+
+    @Override
+    public Basket getBasketByBuyerId(long id) {
+        return basketRepository.findByBuyer_Id(id);
     }
 }

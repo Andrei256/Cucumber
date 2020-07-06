@@ -27,12 +27,12 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Order get(Long id) {
+    public Order get(long id) {
         return orderRepository.findById(id).get();
     }
 
     @Override
-    public void delete(Long id) {
+    public void delete(long id) {
         orderRepository.deleteById(id);
     }
 }

@@ -1,14 +1,11 @@
 package com.cucumber.model;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Data
@@ -35,6 +32,6 @@ public class Order {
     private User seller;*/
 
     @OneToMany
-    @JoinColumn(name = "product_id")
-    private Set<Product> products;
+//    @JoinColumn(name = "product_id")
+    private List<Product> products;
 }

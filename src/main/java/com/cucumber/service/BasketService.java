@@ -7,6 +7,7 @@ import java.util.List;
 public interface BasketService {
     void save(Basket basket);
     List<Basket> getAll();
-    Basket get(Long id);
-    void delete(Long id);
+    Basket get(long id);
+    void delete(long id);
+    Basket getBasketByBuyerId(long id);
 }

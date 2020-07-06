@@ -7,7 +7,7 @@ import java.util.List;
 public interface ProductDescriptionService {
     void save(ProductDescription productDescription);
     List<ProductDescription> getAll();
-    ProductDescription get(Long id);
-    void delete(Long id);
+    ProductDescription get(long id);
+    void delete(long id);
     ProductDescription getProductDescriptionByModelName(String modelName);
 }

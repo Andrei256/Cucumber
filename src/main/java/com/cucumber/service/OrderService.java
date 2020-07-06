@@ -7,6 +7,6 @@ import java.util.List;
 public interface OrderService {
     void save(Order order);
     List<Order> getAll();
-    Order get(Long id);
-    void delete(Long id);
+    Order get(long id);
+    void delete(long id);
 }

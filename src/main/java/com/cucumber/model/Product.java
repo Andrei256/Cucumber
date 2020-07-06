@@ -22,7 +22,6 @@ public class Product {
     private User seller;
 
     @ManyToOne
-//    @EqualsAndHashCode.Exclude
     @JoinColumn(name = "product_description_id")
     private ProductDescription productDescription;
 }

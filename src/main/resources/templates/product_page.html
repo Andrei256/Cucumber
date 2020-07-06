@@ -25,7 +25,7 @@
             <td th:text="${productDescription.description}"></td>
         </tr>
     </table>
-<p>Предложения продавцов</p>
+<p>Предложения магазинов</p>
 <table>
     <tr th:each="product : ${productDescription.products}">
         <td>
@@ -36,11 +36,9 @@
         </td>
         <td>
             <p th:text="${product.cost}"></p>
-            <form th:action="@{'/basket/' + ${product.id}}" method="post">
-                <input type="hidden" name="id" th:value="${product.id}">
+            <form th:action="@{'/basket/add/' + ${product.id}}" method="get">
                 <input type="submit" value="В корзину">
             </form>
-<!--            <button >В корзину</button>-->
         </td>
         <td>
             <p>Контакты</p>

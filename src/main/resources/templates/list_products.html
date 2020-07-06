@@ -7,16 +7,19 @@
 <body>
     <div align="center">
         <table border="1" cellpadding="10">
-                <tr th:each="productDesc : ${productDescriptions}">
-                    <td th:if="${productDesc.filename != null}">
-                        <img th:src="@{'/img/' + ${productDesc.filename}}">
+                <tr th:each="productDescriptionMap : ${productDescriptionsMap}">
+                    <td th:if="${productDescriptionMap.key.filename != null}">
+                        <img th:src="@{'/img/' + ${productDescriptionMap.key.filename}}">
                     </td>
-                    <td th:if="${productDesc.filename == null}">
+                    <td th:if="${productDescriptionMap.key.filename == null}">
                         <img th:src="@{'/img/noPhoto.png'}">
                     </td>
                     <td>
-                        <a th:href="@{'/product/' + ${productDesc.id}}" th:text="${productDesc.modelName}">Name</a>
-                        <p th:text="${productDesc.description}">Text</p>
+                        <a th:href="@{'/product/' + ${productDescriptionMap.key.id}}" th:text="${productDescriptionMap.key.modelName}">Name</a>
+                        <p th:text="${productDescriptionMap.key.description}">Text</p>
+                    </td>
+                    <td>
+                        <p th:text="'от ' + ${productDescriptionMap.value}"></p>
                     </td>
                 </tr>
         </table>
