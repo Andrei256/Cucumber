@@ -94,8 +94,7 @@ public class ProductController {
 
     @GetMapping("/{id}")
     public String showProductPage(@PathVariable(name = "id") long id, Model model) {
-        ProductDescription productDescription = productDescriptionService.get(id);
-        model.addAttribute("productDescription", productDescription);
+        model.addAttribute("productDescription", productDescriptionService.get(id));
         return "product_page";
     }
 }

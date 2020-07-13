@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Корзина</title>
+</head>
+<body>
+    <div align="center" th:if="${basket == null || basket.products.isEmpty()} ">
+        <p>Ваша  корзина пуста</p>
+    </div>
+    <div align="center" th:if="${basket != null && !basket.products.isEmpty()}">
+        <table border="1" cellpadding="10">
+            <tr th:each="product : ${basket.products}">
+                <td th:if="${product.productDescription.filename != null}">
+                    <img th:src="@{'/img/' + ${product.productDescription.filename}}">
+                </td>
+                <td th:if="${product.productDescription.filename == null}">
+                    <img th:src="@{'/img/noPhoto.png'}">
+                </td>
+                <td th:text="${product.productDescription.modelName}"></td>
+                <td th:text="${product.cost}"></td>
+                <td>
+                    <form th:action="@{'/basket/delete/' + ${product.id}}" method="get">
+                        <input type="submit" value="Удалить">
+                    </form>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><p>Сумма к оплате:</p></td>
+                <td th:text="${basket.totalCost}"></td>
+            </tr>
+        </table>
+        <br/>
+        <form th:action="@{'/order'}" method="get">
+            <input type="submit" value="Оформить заказ">
+        </form>
+    </div>
+</body>
+</html>

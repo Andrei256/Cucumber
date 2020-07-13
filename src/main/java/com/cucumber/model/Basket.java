@@ -23,6 +23,5 @@ public class Basket {
     private User buyer;
 
     @OneToMany
-//    @JoinColumn(name = "product_id")
     private List<Product> products = new ArrayList<>();
 }

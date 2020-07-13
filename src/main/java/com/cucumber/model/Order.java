@@ -16,11 +16,13 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    @Column(name = "time_of_delivery")
+    @Column(name = "date_of_delivery")
     private LocalDate dateOfDelivery;
     private String address;
-    @Column(name = "total_cost")
-    private float totalCost;
+    @Column(name = "phone_number")
+    private String phoneNumber;
+//    @Column(name = "total_cost")
+//    private float totalCost;
     private boolean complete;
 
     @ManyToOne
@@ -32,6 +34,5 @@ public class Order {
     private User seller;*/
 
     @OneToMany
-//    @JoinColumn(name = "product_id")
     private List<Product> products;
 }
