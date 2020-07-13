@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Заказ</title>
+</head>
+<body>
+    <div align="center">
+        <form th:action="@{/order/add}" th:object="${order}" method="post">
+            <table cellpadding="10">
+                <tr th:each="product : ${basket.products}">
+                    <td th:if="${product.productDescription.filename != null}">
+                        <img width="50" height="50" th:src="@{'/img/' + ${product.productDescription.filename}}">
+                    </td>
+                    <td th:if="${product.productDescription.filename == null}">
+                        <img width="50" height="50" th:src="@{'/img/noPhoto.png'}">
+                    </td>
+                    <td th:text="${product.productDescription.modelName}">
+                    </td>
+                    <td th:text="${product.cost}"></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td><p>Сумма к оплате:</p></td>
+                    <td th:text="${basket.totalCost}"></td>
+                </tr>
+            </table>
+
+            <table cellpadding="10">
+                <tr>
+                    <td>Адрес доставки:</td>
+                    <td><textarea rows="4" cols="60" th:field="*{address}"></textarea></td>
+                </tr>
+                <tr>
+                    <td>Время доставки:</td>
+                    <td><input type="date" th:field="*{dateOfDelivery}"></td>
+                </tr>
+                <tr>
+                    <td>Контактный номер:</td>
+                    <td><input type="text" th:field="*{phoneNumber}"></td>
+                </tr>
+            </table>
+            <br/>
+            <input type="submit" value="Заказать" >
+        </form>
+    </div>
+</body>
+</html>
