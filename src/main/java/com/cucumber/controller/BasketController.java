@@ -3,7 +3,6 @@ package com.cucumber.controller;
 import com.cucumber.model.User;
 import com.cucumber.service.BasketService;
 import com.cucumber.service.ProductService;
-import com.cucumber.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -21,9 +20,6 @@ public class BasketController {
 
     @Autowired
     private BasketService basketService;
-
-    @Autowired
-    private UserService userService;
 
     @GetMapping
     public String showBasketPage(@AuthenticationPrincipal User buyer, Model model) {

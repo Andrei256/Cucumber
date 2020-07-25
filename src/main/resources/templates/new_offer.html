@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Добавить предложение магазина</title>
+</head>
+<body>
+<h2 th:text="${productDescription.modelName}"></h2>
+<table>
+    <tr>
+        <td></td>
+        <td th:if="${productDescription.filename != null}">
+            <img th:src="@{'/img/' + ${productDescription.filename}}">
+        </td>
+        <td th:if="${productDescription.filename == null}">
+            <img th:src="@{'/img/noPhoto.png'}">
+        </td>
+    </tr>
+    <tr>
+        <td>Производитель:</td>
+        <td th:text="${productDescription.manufacturer}"></td>
+    </tr>
+    <tr>
+        <td>Описание:</td>
+        <td th:text="${productDescription.description}"></td>
+    </tr>
+        <form th:action="@{'/product/add'}" method="post">
+             <tr>
+                <input type="hidden" name="id" th:value="${productDescription.id}">
+                <td>Стоимость:</td>
+                <td><input type="text" name="cost"></td>
+            </tr>
+            <tr>
+                <td>
+                </td>
+                <td><input type="submit" value="Добавить"></td>
+            </tr>
+        </form>
+</table>
+</body>
+</html>

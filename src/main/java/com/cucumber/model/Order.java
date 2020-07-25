@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.List;
+import java.time.LocalDateTime;
 
 @Entity
 @Data
@@ -16,8 +16,8 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    @Column(name = "date_of_delivery")
-    private LocalDate dateOfDelivery;
+    @Column(name = "orderTime")
+    private LocalDateTime orderTime;
     private String address;
     @Column(name = "phone_number")
     private String phoneNumber;
@@ -29,10 +29,11 @@ public class Order {
     @JoinColumn(name = "user_buyer_id")
     private User buyer;
 
-/*    @ManyToOne
+    @ManyToOne
     @JoinColumn(name = "user_seller_id")
-    private User seller;*/
+    private User seller;
 
-    @OneToMany
-    private List<Product> products;
+    @OneToOne
+    @JoinColumn(name = "product_id")
+    private Product product;
 }

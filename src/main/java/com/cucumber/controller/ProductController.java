@@ -7,16 +7,16 @@ import com.cucumber.model.User;
 import com.cucumber.service.ProductDescriptionService;
 import com.cucumber.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/product")
@@ -27,9 +27,6 @@ public class ProductController {
 
     @Autowired
     private ProductService productService;
-
-    @Value("${upload.path}")
-    private String uploadPath;
 
     @GetMapping
     public String showListProductsPage(Model model) {
@@ -51,6 +48,14 @@ public class ProductController {
         return "list_products";
     }
 
+    @GetMapping("/{id}")
+    public String showProductPage(@PathVariable(name = "id") long id, Model model) {
+        model.addAttribute("productDescription", productDescriptionService.get(id));
+        return "product_page";
+    }
+
+    //SHOP
+
     @GetMapping("/new")
     public String showNewProductPage(Model model) {
         ProductDescription productDescription = new ProductDescription();
@@ -67,34 +72,30 @@ public class ProductController {
             @RequestParam("file") MultipartFile file
             ) throws IOException {
 
-        if (productDescriptionService.getProductDescriptionByModelName(productDescription.getModelName()) == null) {
-            Product product = new Product();
-            product.setCost(cost);
-
-            if (file != null && !file.getOriginalFilename().isEmpty()) {
-                File uploadDir = new File(uploadPath);
-
-                if (!uploadDir.exists()) {
-                    uploadDir.mkdir();
-                }
-
-                String uuidFile = UUID.randomUUID().toString();
-                String resultFilename = uuidFile + "." + file.getOriginalFilename();
-                file.transferTo(new File(uploadPath + "/" + resultFilename));
-                productDescription.setFilename(resultFilename);
-            }
-
-            product.setProductDescription(productDescription);
-            product.setSeller(seller);
-            productDescriptionService.save(productDescription);
-            productService.save(product);
+        if (productDescriptionService.addProductDescription(productDescription, file)) {
+            productService.addProductOffer(seller, cost, productDescriptionService.get(productDescription.getId()));
+            return "redirect:/product";
         }
-        return "redirect:/product";
+        return "redirect:/product/new";
     }
 
-    @GetMapping("/{id}")
-    public String showProductPage(@PathVariable(name = "id") long id, Model model) {
+    @GetMapping("/add/{id}")
+    public String showPageForAddProductOffer(@PathVariable(name = "id") long id, Model model) {
         model.addAttribute("productDescription", productDescriptionService.get(id));
-        return "product_page";
+        return "new_offer";
     }
+
+    @PostMapping("/add")
+    public String addProductOffer(
+            @AuthenticationPrincipal User seller,
+            @RequestParam(name = "cost") float cost,
+            @RequestParam(name = "id") long id) {
+
+            if (productService.addProductOffer(seller, cost, productDescriptionService.get(id))) {
+                return "redirect:/product/" + id;
+            }
+        return "redirect:/product/add/" + id;
+    }
+
+
 }

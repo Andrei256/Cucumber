@@ -1,6 +1,8 @@
 package com.cucumber.service.impl;
 
 import com.cucumber.model.Product;
+import com.cucumber.model.ProductDescription;
+import com.cucumber.model.User;
 import com.cucumber.repository.ProductRepository;
 import com.cucumber.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,4 +37,18 @@ public class ProductServiceImpl implements ProductService {
     public void delete(long id) {
         productRepository.deleteById(id);
     }
+
+    @Override
+    public boolean addProductOffer(User seller, float cost, ProductDescription productDescription) {
+        if (productRepository.findBySeller_IdAndProductDescription_Id(seller.getId(), productDescription.getId()) == null) {
+            Product product = new Product();
+            product.setCost(cost);
+            product.setProductDescription(productDescription);
+            product.setSeller(seller);
+            productRepository.save(product);
+            return true;
+        }
+        return false;
+    }
+
 }

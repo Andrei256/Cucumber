@@ -24,6 +24,14 @@
             <td>Описание:</td>
             <td th:text="${productDescription.description}"></td>
         </tr>
+        <tr>
+            <td></td>
+            <td>
+                <form th:action="@{'/product/add/' + ${productDescription.id}}" method="get">
+                    <input type="submit" value="Добавить предложение">
+                </form>
+            </td>
+        </tr>
     </table>
 <p>Предложения магазинов</p>
 <table>

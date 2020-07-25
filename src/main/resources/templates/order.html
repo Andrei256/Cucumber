@@ -6,7 +6,7 @@
 </head>
 <body>
     <div align="center">
-        <form th:action="@{/order/add}" th:object="${order}" method="post">
+        <form th:action="@{/order/add}" method="post">
             <table cellpadding="10">
                 <tr th:each="product : ${basket.products}">
                     <td th:if="${product.productDescription.filename != null}">
@@ -29,15 +29,15 @@
             <table cellpadding="10">
                 <tr>
                     <td>Адрес доставки:</td>
-                    <td><textarea rows="4" cols="60" th:field="*{address}"></textarea></td>
+                    <td><textarea rows="4" cols="60" name="address"></textarea></td>
                 </tr>
-                <tr>
+<!--                <tr>
                     <td>Время доставки:</td>
                     <td><input type="date" th:field="*{dateOfDelivery}"></td>
-                </tr>
+                </tr>-->
                 <tr>
                     <td>Контактный номер:</td>
-                    <td><input type="text" th:field="*{phoneNumber}"></td>
+                    <td><input type="text" name="phoneNumber"></td>
                 </tr>
             </table>
             <br/>
