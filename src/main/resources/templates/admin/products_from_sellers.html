@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Список товаров</title>
+</head>
+<body>
+<p align="center"><a href="/product/fromSellers/new">Новые</a> <a href="/product/fromSellers/all">Все</a></p>
+<div th:if="${productsList.isEmpty()}" align="center">
+    <p>Нет товаров</p>
+</div>
+<div th:if="${!productsList.isEmpty()}" align="center">
+    <table border="1" cellpadding="10">
+        <tr th:each="product : ${productsList}">
+            <td th:if="${product.filename != null}">
+                <img th:src="@{'/img/' + ${product.filename}}">
+            </td>
+            <td th:if="${product.filename == null}">
+                <img th:src="@{'/img/noPhoto.png'}">
+            </td>
+            <td>
+                <p style="color: #26ff0c" id="new" th:if="${!product.active}">new</p>
+                <a th:href="@{'/product/' + ${product.id} + '/edit'}" th:text="${product.modelName}">Name</a>
+                <p th:text="${product.description}">Text</p>
+            </td>
+            <td>
+                <form th:if="${!product.active}"  th:action="@{'/product/' + ${product.id} + '/delete'}" method="post">
+                    <input type="submit" value="Удалить">
+                </form>
+            </td>
+        </tr>
+    </table>
+</div>
+</body>
+</html>

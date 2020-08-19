@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Заказы</title>
+</head>
+<body>
+
+
+    <p align="center">
+        <a href="/order/active">Активные</a>
+        <a href="/order/completed">Выполненные</a>
+        <a href="/order/canceled">Отмененные</a>
+    </p>
+
+<div align="center" th:if="${listOrders.isEmpty()} ">
+    <p>Нет заказов</p>
+</div>
+<div align="center" th:if="${!listOrders.isEmpty()}">
+    <table border="1" cellpadding="10">
+        <tr th:each="order : ${listOrders}">
+            <td th:if="${order.offer.product.filename != null}">
+                <img th:src="@{'/img/' + ${order.offer.product.filename}}">
+            </td>
+            <td th:if="${order.offer.product.filename == null}">
+                <img th:src="@{'/img/noPhoto.png'}">
+            </td>
+            <td>
+                <a th:text="${order.offer.product.modelName}" th:href="@{'/product/' + ${order.offer.product.id}}"> </a>
+                <p>
+                    <a>Покупатель: </a>
+                    <a th:text="${order.buyer.username}"></a>
+                </p>
+                <p>
+                    <a>Контактный номер: </a>
+                    <a th:text="${order.phoneNumber}"></a>
+                </p>
+                <p>
+                    <a>Адрес доставки: </a>
+                    <a th:text="${order.address}"></a>
+                </p>
+            </td>
+            <td>
+                <div th:if="${order.state.toString().equals('ACTIVE')}">
+                    <p th:text="${order.state.name}"></p>
+                </div>
+                <div th:if="${!order.state.toString().equals('ACTIVE')}">
+                    <p th:text="${order.state.name}"></p>
+                    <p th:text="${order.dateOfAction}"></p>
+                </div>
+                <p>
+                    <a>Стоимость - </a>
+                    <a th:text="${order.cost}"></a>
+                </p>
+            </td>
+            <td>
+                <div th:if="${order.state.toString().equals('ACTIVE')}">
+                    <p>
+                    <form th:action="@{'/order/' + ${order.id} + '/state'}" method="post">
+                        <input type="hidden" name="state" value="completed">
+                        <input type="submit" value="Выполнен">
+                    </form>
+                    <br/>
+                    <form th:action="@{'/order/' + ${order.id} + '/state'}" method="post">
+                        <input type="hidden" name="state" value="canceled">
+                        <input type="submit" value="Отменить">
+                    </form>
+                    </p>
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>
+</body>
+</html>

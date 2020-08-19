@@ -26,8 +26,6 @@ public class User implements UserDetails {
     @Column(name = "phone_number")
     private String phoneNumber;
     private String text;
-    @Column(name = "lik")
-    private int like;
     private boolean active;
     @Column(name = "activation_code")
     private String activationCode;
@@ -37,15 +35,12 @@ public class User implements UserDetails {
 
     @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "seller")
-    private List<Product> products;
+    private List<Offer> offers;
 
     @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "buyer")
     private List<Order> ordersForBuyer;
 
-/*    @EqualsAndHashCode.Exclude
-    @OneToMany(mappedBy = "seller")
-    private List<Order> ordersForSeller;*/
 
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))

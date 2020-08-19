@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Создать товар</title>
+    <title>Добавить товар</title>
 </head>
 <body>
     <div align="center">
         <h2>Введите данные</h2>
-        <form action="#" th:action="@{/product/save}" th:object="${productDescription}" method="post" enctype="multipart/form-data">
+        <form action="#" th:action="@{/product/add}" th:object="${product}" method="post" enctype="multipart/form-data">
             <table border="1" cellpadding="10">
                 <tr>
                     <td>Изображение:</td>
@@ -35,12 +35,8 @@
                     <td><textarea rows="10" cols="45" th:field="*{description}"></textarea></td>
                 </tr>
                 <tr>
-                    <td>Стоимость:</td>
-                    <td><input type="text" name="cost"></td>
-                </tr>
-                <tr>
                     <td></td>
-                    <td><input type="submit" value="Создать"></td>
+                    <td><input type="submit" value="Добавить"></td>
                 </tr>
             </table>
         </form>

@@ -5,7 +5,6 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Entity
 @Data
@@ -16,24 +15,23 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    @Column(name = "orderTime")
-    private LocalDateTime orderTime;
+    @Column(name = "date_of_action")
+    private LocalDate dateOfAction;
     private String address;
     @Column(name = "phone_number")
     private String phoneNumber;
-//    @Column(name = "total_cost")
-//    private float totalCost;
-    private boolean complete;
+    private State state;
+    private float cost;
 
     @ManyToOne
-    @JoinColumn(name = "user_buyer_id")
+    @JoinColumn(name = "buyer_id")
     private User buyer;
 
     @ManyToOne
-    @JoinColumn(name = "user_seller_id")
+    @JoinColumn(name = "seller_id")
     private User seller;
 
     @OneToOne
-    @JoinColumn(name = "product_id")
-    private Product product;
+    @JoinColumn(name = "offer_id")
+    private Offer offer;
 }

@@ -2,32 +2,32 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title th:text="${productDescription.modelName}"></title>
+    <title th:text="${product.modelName}"></title>
 </head>
 <body>
-<h2 th:text="${productDescription.modelName}"></h2>
+<h2 th:text="${product.modelName}"></h2>
     <table>
         <tr>
             <td></td>
-            <td th:if="${productDescription.filename != null}">
-                <img th:src="@{'/img/' + ${productDescription.filename}}">
+            <td th:if="${product.filename != null}">
+                <img th:src="@{'/img/' + ${product.filename}}">
             </td>
-            <td th:if="${productDescription.filename == null}">
+            <td th:if="${product.filename == null}">
                 <img th:src="@{'/img/noPhoto.png'}">
             </td>
         </tr>
         <tr>
             <td>Производитель:</td>
-            <td th:text="${productDescription.manufacturer}"></td>
+            <td th:text="${product.manufacturer}"></td>
         </tr>
         <tr>
             <td>Описание:</td>
-            <td th:text="${productDescription.description}"></td>
+            <td th:text="${product.description}"></td>
         </tr>
         <tr>
             <td></td>
             <td>
-                <form th:action="@{'/product/add/' + ${productDescription.id}}" method="get">
+                <form th:action="@{'/product/' + ${product.id} + '/offer/new'}" method="get">
                     <input type="submit" value="Добавить предложение">
                 </form>
             </td>
@@ -35,23 +35,24 @@
     </table>
 <p>Предложения магазинов</p>
 <table>
-    <tr th:each="product : ${productDescription.products}">
+    <tr th:each="offer : ${product.offers}">
         <td>
-            <p th:text="${product.seller.username}"></p>
+            <p th:text="${offer.seller.username}"></p>
         </td>
         <td>
-            <p th:text="${product.seller.text}"></p>
+            <p th:text="${offer.seller.text}"></p>
         </td>
         <td>
-            <p th:text="${product.cost}"></p>
-            <form th:action="@{'/basket/add/' + ${product.id}}" method="get">
+            <p th:text="${offer.cost}"></p>
+            <form th:action="@{'/basket/' + ${basket.id} + '/add'}" method="post">
+                <input type="hidden" name="offerId" th:value="${offer.id}">
                 <input type="submit" value="В корзину">
             </form>
         </td>
         <td>
             <p>Контакты</p>
-            <p th:text="${product.seller.phoneNumber}"></p>
-            <p th:text="${product.seller.email}"></p>
+            <p th:text="${offer.seller.phoneNumber}"></p>
+            <p th:text="${offer.seller.email}"></p>
         </td>
     </tr>
 </table>

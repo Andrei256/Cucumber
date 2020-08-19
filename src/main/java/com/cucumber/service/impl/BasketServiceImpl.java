@@ -1,7 +1,7 @@
 package com.cucumber.service.impl;
 
 import com.cucumber.model.Basket;
-import com.cucumber.model.Product;
+import com.cucumber.model.Offer;
 import com.cucumber.model.User;
 import com.cucumber.repository.BasketRepository;
 import com.cucumber.service.BasketService;
@@ -39,42 +39,43 @@ public class BasketServiceImpl implements BasketService {
     }
 
     @Override
-    public Basket getBasketByBuyerId(long id) {
-        return basketRepository.findByBuyer_Id(id);
-    }
-
-    @Override
-    public void addProductInBasket(Product product, User buyer) {
+    public Basket getBasket(User buyer) {
         Basket basket = basketRepository.findByBuyer_Id(buyer.getId());
         if (basket == null) {
             basket = new Basket();
             basket.setBuyer(buyer);
+            basketRepository.save(basket);
         }
-        List<Product> products = basket.getProducts();
-        if (!products.contains(product)) {
-            products.add(product);
-            basket.setProducts(products);
+        return basket;
+    }
+
+    @Override
+    public void addProductInBasket(Offer offer, long id) {
+        Basket basket = basketRepository.findById(id).get();
+        List<Offer> offers = basket.getOffers();
+        if (!offers.contains(offer)) {
+            offers.add(offer);
+            basket.setOffers(offers);
 
             float totalCost = 0;
-            for (Product productIter : products) {
-                totalCost = totalCost + productIter.getCost();
+            for (Offer offerIter : offers) {
+                totalCost = totalCost + offerIter.getCost();
             }
             basket.setTotalCost(totalCost);
-
             basketRepository.save(basket);
         }
     }
 
     @Override
-    public void deleteProductFromBasket(Product product, User buyer) {
-        Basket basket = basketRepository.findByBuyer_Id(buyer.getId());
-        List<Product> products = basket.getProducts();
-        products.remove(product);
-        basket.setProducts(products);
+    public void deleteProductFromBasket(Offer offer, long id) {
+        Basket basket = basketRepository.findById(id).get();
+        List<Offer> offers = basket.getOffers();
+        offers.remove(offer);
+        basket.setOffers(offers);
 
         float totalCost = 0;
-        for (Product productIter : products) {
-            totalCost = totalCost + productIter.getCost();
+        for (Offer offerIter : offers) {
+            totalCost = totalCost + offerIter.getCost();
         }
         basket.setTotalCost(totalCost);
 

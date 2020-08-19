@@ -5,28 +5,27 @@
     <title>Добавить предложение магазина</title>
 </head>
 <body>
-<h2 th:text="${productDescription.modelName}"></h2>
+<h2 th:text="${product.modelName}"></h2>
 <table>
     <tr>
         <td></td>
-        <td th:if="${productDescription.filename != null}">
-            <img th:src="@{'/img/' + ${productDescription.filename}}">
+        <td th:if="${product.filename != null}">
+            <img th:src="@{'/img/' + ${product.filename}}">
         </td>
-        <td th:if="${productDescription.filename == null}">
+        <td th:if="${product.filename == null}">
             <img th:src="@{'/img/noPhoto.png'}">
         </td>
     </tr>
     <tr>
         <td>Производитель:</td>
-        <td th:text="${productDescription.manufacturer}"></td>
+        <td th:text="${product.manufacturer}"></td>
     </tr>
     <tr>
         <td>Описание:</td>
-        <td th:text="${productDescription.description}"></td>
+        <td th:text="${product.description}"></td>
     </tr>
-        <form th:action="@{'/product/add'}" method="post">
+        <form th:action="@{'/product/' + ${product.id} + '/offer/add'}" method="post">
              <tr>
-                <input type="hidden" name="id" th:value="${productDescription.id}">
                 <td>Стоимость:</td>
                 <td><input type="text" name="cost"></td>
             </tr>

@@ -5,26 +5,32 @@
     <title>Список товаров</title>
 </head>
 <body>
-    <div align="center">
+    <div th:if="${productsMap.isEmpty()}" align="center">
+        <p>Упс! Что-то пошло не так.</p>
+    </div>
+    <div th:if="${!productsMap.isEmpty()}" align="center">
         <table border="1" cellpadding="10">
-                <tr th:each="productDescriptionMap : ${productDescriptionsMap}">
-                    <td th:if="${productDescriptionMap.key.filename != null}">
-                        <img th:src="@{'/img/' + ${productDescriptionMap.key.filename}}">
+                <tr th:each="productMap : ${productsMap}">
+                    <td th:if="${productMap.key.filename != null}">
+                        <img th:src="@{'/img/' + ${productMap.key.filename}}">
                     </td>
-                    <td th:if="${productDescriptionMap.key.filename == null}">
+                    <td th:if="${productMap.key.filename == null}">
                         <img th:src="@{'/img/noPhoto.png'}">
                     </td>
                     <td>
-                        <a th:href="@{'/product/' + ${productDescriptionMap.key.id}}" th:text="${productDescriptionMap.key.modelName}">Name</a>
-                        <p th:text="${productDescriptionMap.key.description}">Text</p>
+                        <a th:href="@{'/product/' + ${productMap.key.id}}" th:text="${productMap.key.modelName}">Name</a>
+                        <p th:text="${productMap.key.description}"></p>
                     </td>
                     <td>
-                        <p th:text="'от ' + ${productDescriptionMap.value}"></p>
+                        <div th:if="${productMap.value != null}">
+                            <p th:text="'от ' + ${productMap.value}"></p>
+                        </div>
+                        <div th:if="${productMap.value == null}">
+                            <p>Нет предложений</p>
+                        </div>
                     </td>
                 </tr>
         </table>
-
     </div>
-
 </body>
 </html>

@@ -41,13 +41,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean addUser(User user) {
-        User userFromDB = userRepository.findByUsername(user.getUsername());
-        if (userFromDB != null) {
+        if (userRepository.findByUsername(user.getUsername()) != null) {
             return false;
         }
         user.setActive(true);
         user.setRoles(Collections.singleton(Role.USER));
-
         userRepository.save(user);
         return true;
     }

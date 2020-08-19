@@ -5,22 +5,22 @@
     <title>Корзина</title>
 </head>
 <body>
-    <div align="center" th:if="${basket == null || basket.products.isEmpty()} ">
+    <div align="center" th:if="${basket == null || basket.offers.isEmpty()} ">
         <p>Ваша  корзина пуста</p>
     </div>
-    <div align="center" th:if="${basket != null && !basket.products.isEmpty()}">
+    <div align="center" th:if="${basket != null && !basket.offers.isEmpty()}">
         <table border="1" cellpadding="10">
-            <tr th:each="product : ${basket.products}">
-                <td th:if="${product.productDescription.filename != null}">
-                    <img th:src="@{'/img/' + ${product.productDescription.filename}}">
+            <tr th:each="offer : ${basket.offers}">
+                <td th:if="${offer.product.filename != null}">
+                    <img th:src="@{'/img/' + ${offer.product.filename}}">
                 </td>
-                <td th:if="${product.productDescription.filename == null}">
+                <td th:if="${offer.product.filename == null}">
                     <img th:src="@{'/img/noPhoto.png'}">
                 </td>
-                <td th:text="${product.productDescription.modelName}"></td>
-                <td th:text="${product.cost}"></td>
+                <td th:text="${offer.product.modelName}"></td>
+                <td th:text="${offer.cost}"></td>
                 <td>
-                    <form th:action="@{'/basket/delete/' + ${product.id}}" method="get">
+                    <form th:action="@{'/basket/' + ${basket.id} + '/offer/' + ${offer.id} + '/delete'}" method="post">
                         <input type="submit" value="Удалить">
                     </form>
                 </td>

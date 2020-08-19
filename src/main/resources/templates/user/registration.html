@@ -15,6 +15,9 @@
             <p><input type="email" name="email" placeholder="some@some.com"></p>
             <p><input type="password" name="password" placeholder="Пароль"></p>
             <p><input type="submit" value="Регистрация"></p>
+            <div th:if="${massage != null}">
+                <p th:text="${massage}"></p>
+            </div>
             <p><a href="/login">Авторизироваться</a></p>
         </form>
     </div>

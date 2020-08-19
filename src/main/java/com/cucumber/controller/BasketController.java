@@ -2,43 +2,49 @@ package com.cucumber.controller;
 
 import com.cucumber.model.User;
 import com.cucumber.service.BasketService;
-import com.cucumber.service.ProductService;
+import com.cucumber.service.OfferService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/basket")
 public class BasketController {
 
     @Autowired
-    private ProductService productService;
+    private OfferService offerService;
 
     @Autowired
     private BasketService basketService;
 
     @GetMapping
-    public String showBasketPage(@AuthenticationPrincipal User buyer, Model model) {
-        model.addAttribute("basket", basketService.getBasketByBuyerId(buyer.getId()));
-        return "basket";
+    public String showBasketPage() {
+        return "user/basket";
     }
 
-    @GetMapping("/delete/{id}")
-    public String deleteProductFromBasket(@AuthenticationPrincipal User buyer, @PathVariable("id") long id) {
-        basketService.deleteProductFromBasket(productService.get(id), buyer);
+    @PostMapping("/{basketId}/offer/{offerId}/delete")
+    public String deleteProductFromBasket(
+            @PathVariable("basketId") long basketId,
+            @PathVariable("offerId") long offerId) {
+        basketService.deleteProductFromBasket(offerService.get(offerId), basketId);
         return "redirect:/basket";
     }
 
-    @GetMapping("/add/{id}")
-    public String addProductInBasket(@AuthenticationPrincipal User buyer,
-                                     @PathVariable("id") long id
+    @PostMapping("/{basketId}/add")
+    public String addProductInBasket(
+            @PathVariable("basketId") long basketId,
+            @RequestParam("offerId") long offerId
     ) {
-        basketService.addProductInBasket(productService.get(id), buyer);
+        basketService.addProductInBasket(offerService.get(offerId), basketId);
         return "redirect:/product";
     }
 
+    @ModelAttribute
+    public void getBasket(
+            Model model,
+            @AuthenticationPrincipal User buyer) {
+        model.addAttribute("basket", basketService.getBasket(buyer));
+    }
 }

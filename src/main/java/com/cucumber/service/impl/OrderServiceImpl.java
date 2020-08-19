@@ -2,14 +2,15 @@ package com.cucumber.service.impl;
 
 import com.cucumber.model.Basket;
 import com.cucumber.model.Order;
-import com.cucumber.model.Product;
+import com.cucumber.model.Offer;
+import com.cucumber.model.State;
 import com.cucumber.repository.OrderRepository;
 import com.cucumber.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -41,19 +42,38 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public boolean addOrder(Basket basket, String phoneNumber, String address) {
-        if (basket != null && !basket.getProducts().isEmpty()) {
-            for (Product product : basket.getProducts()) {
+        if (basket != null && !basket.getOffers().isEmpty()) {
+            for (Offer offer : basket.getOffers()) {
                 Order order = new Order();
                 order.setBuyer(basket.getBuyer());
                 order.setPhoneNumber(phoneNumber);
                 order.setAddress(address);
-                order.setProduct(product);
-                order.setOrderTime(LocalDateTime.now());
-                order.setSeller(product.getSeller());
+                order.setState(State.ACTIVE);
+                order.setOffer(offer);
+                order.setCost(offer.getCost());
+                order.setSeller(offer.getSeller());
                 orderRepository.save(order);
             }
             return true;
         }
         return false;
     }
+
+    @Override
+    public List<Order> getAllBuyersOrders(long buyerId) {
+        return orderRepository.findByBuyer_Id(buyerId);
+    }
+
+    @Override
+    public List<Order> getSellerOrders(long sellerId, State state) {
+        return orderRepository.findBySeller_IdAndAndState(sellerId, state);
+    }
+
+    public void editOrderState(long id, State state) {
+        Order order = orderRepository.findById(id).get();
+        order.setDateOfAction(LocalDate.now());
+        order.setState(state);
+        orderRepository.save(order);
+    }
+
 }

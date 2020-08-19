@@ -2,9 +2,9 @@ package com.cucumber.controller;
 
 import com.cucumber.model.Category;
 import com.cucumber.model.Product;
-import com.cucumber.model.ProductDescription;
 import com.cucumber.model.User;
-import com.cucumber.service.ProductDescriptionService;
+import com.cucumber.service.BasketService;
+import com.cucumber.service.OfferService;
 import com.cucumber.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -14,43 +14,33 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @Controller
 @RequestMapping("/product")
 public class ProductController {
 
     @Autowired
-    private ProductDescriptionService productDescriptionService;
+    private ProductService productService;
 
     @Autowired
-    private ProductService productService;
+    private OfferService offerService;
+
+    @Autowired
+    private BasketService basketService;
 
     @GetMapping
     public String showListProductsPage(Model model) {
-        List<ProductDescription> productDescriptions = productDescriptionService.getAll();
-        Map<ProductDescription, Float> productDescriptionsMap = new HashMap<>();
-        for (ProductDescription productDescription : productDescriptions) {
-            float num;
-            float min = productDescription.getProducts().get(0).getCost();
-            for (Product product : productDescription.getProducts()) {
-                num = product.getCost();
-                if (num < min) {
-                    min = num;
-                }
-            }
-            productDescriptionsMap.put(productDescription, min);
-
-        }
-        model.addAttribute("productDescriptionsMap", productDescriptionsMap);
+        model.addAttribute("productsMap", productService.getAllWhereActiveIsTrueAndMinCost());
         return "list_products";
     }
 
-    @GetMapping("/{id}")
-    public String showProductPage(@PathVariable(name = "id") long id, Model model) {
-        model.addAttribute("productDescription", productDescriptionService.get(id));
+    @GetMapping("/{productId}")
+    public String showProductPage(
+            @AuthenticationPrincipal User buyer,
+            @PathVariable(name = "productId") long productId,
+            Model model) {
+        model.addAttribute("product", productService.get(productId));
+        model.addAttribute("basket", basketService.getBasket(buyer));
         return "product_page";
     }
 
@@ -58,44 +48,79 @@ public class ProductController {
 
     @GetMapping("/new")
     public String showNewProductPage(Model model) {
-        ProductDescription productDescription = new ProductDescription();
-        model.addAttribute("productDescription", productDescription);
+        Product product = new Product();
+        model.addAttribute("product", product);
         model.addAttribute("categories", Category.values());
-        return "new_product";
+        return "shop/new_product";
     }
 
-    @PostMapping("/save")
-    public String saveNewProduct(
-            @AuthenticationPrincipal User seller,
-            @ModelAttribute("product") ProductDescription productDescription,
-            @RequestParam("cost") float cost,
+    @PostMapping("/add")
+    public String addNewProduct(
+            @ModelAttribute("product") Product product,
             @RequestParam("file") MultipartFile file
-            ) throws IOException {
-
-        if (productDescriptionService.addProductDescription(productDescription, file)) {
-            productService.addProductOffer(seller, cost, productDescriptionService.get(productDescription.getId()));
+    ) throws IOException {
+        if (productService.addProduct(product, file)) {
             return "redirect:/product";
         }
         return "redirect:/product/new";
     }
 
-    @GetMapping("/add/{id}")
-    public String showPageForAddProductOffer(@PathVariable(name = "id") long id, Model model) {
-        model.addAttribute("productDescription", productDescriptionService.get(id));
-        return "new_offer";
+    @GetMapping("/{productId}/offer/new")
+    public String showPageForAddProductOffer(
+            @PathVariable(name = "productId") long productId,
+            Model model) {
+        model.addAttribute("product", productService.get(productId));
+        return "shop/new_offer";
     }
 
-    @PostMapping("/add")
+    @PostMapping("/{productId}/offer/add")
     public String addProductOffer(
             @AuthenticationPrincipal User seller,
             @RequestParam(name = "cost") float cost,
-            @RequestParam(name = "id") long id) {
-
-            if (productService.addProductOffer(seller, cost, productDescriptionService.get(id))) {
-                return "redirect:/product/" + id;
-            }
-        return "redirect:/product/add/" + id;
+            @PathVariable(name = "productId") long productId) {
+        offerService.addOffer(seller, cost, productService.get(productId));
+        return "redirect:/product/" + productId;
     }
 
+    //ADMIN
 
+    @GetMapping("/fromSellers/{sort}")
+    public String showPageOffersFromSellers(
+            @PathVariable("sort") String sort,
+            Model model) {
+        switch (sort) {
+            case "new":
+                model.addAttribute("productsList", productService.getAllWhereActiveIsFalse());
+                break;
+            case "all":
+                model.addAttribute("productsList", productService.getAll());
+                break;
+        }
+        return "admin/products_from_sellers";
+    }
+
+    @GetMapping("/{productId}/edit")
+    public String showEditProductPage(
+            @PathVariable("productId") long productId,
+            Model model) {
+        model.addAttribute("product", productService.get(productId));
+        model.addAttribute("categories", Category.values());
+        return "admin/edit_product";
+    }
+
+    @PostMapping("/{productId}/edit")
+    public String editProduct(
+            @PathVariable("productId") long productId,
+            @ModelAttribute("product") Product product,
+            @RequestParam("file") MultipartFile file
+    ) throws IOException {
+        productService.editProduct(productId, product, file);
+        return "redirect:/product/fromSellers/all";
+    }
+
+    @PostMapping("/{productId}/delete")
+    public String deleteProductFromBasket(@PathVariable("productId") long productId) {
+        productService.delete(productId);
+        return "redirect:/product/fromSellers/all";
+    }
 }

@@ -19,9 +19,9 @@ public class Basket {
     private float totalCost;
 
     @OneToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "buyer_id")
     private User buyer;
 
     @OneToMany
-    private List<Product> products = new ArrayList<>();
+    private List<Offer> offers = new ArrayList<>();
 }
