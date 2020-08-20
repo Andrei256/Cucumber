@@ -1,6 +1,7 @@
 package com.cucumber.model;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -23,14 +24,17 @@ public class Order {
     private State state;
     private float cost;
 
+    @EqualsAndHashCode.Exclude
     @ManyToOne
     @JoinColumn(name = "buyer_id")
     private User buyer;
 
+    @EqualsAndHashCode.Exclude
     @ManyToOne
     @JoinColumn(name = "seller_id")
     private User seller;
 
+    @EqualsAndHashCode.Exclude
     @OneToOne
     @JoinColumn(name = "offer_id")
     private Offer offer;

@@ -30,7 +30,7 @@ public class BasketServiceImpl implements BasketService {
 
     @Override
     public Basket get(long id) {
-        return basketRepository.findById(id).get();
+        return basketRepository.getOne(id);
     }
 
     @Override
@@ -51,7 +51,7 @@ public class BasketServiceImpl implements BasketService {
 
     @Override
     public void addProductInBasket(Offer offer, long id) {
-        Basket basket = basketRepository.findById(id).get();
+        Basket basket = basketRepository.getOne(id);
         List<Offer> offers = basket.getOffers();
         if (!offers.contains(offer)) {
             offers.add(offer);
@@ -68,7 +68,7 @@ public class BasketServiceImpl implements BasketService {
 
     @Override
     public void deleteProductFromBasket(Offer offer, long id) {
-        Basket basket = basketRepository.findById(id).get();
+        Basket basket = basketRepository.getOne(id);
         List<Offer> offers = basket.getOffers();
         offers.remove(offer);
         basket.setOffers(offers);

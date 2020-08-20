@@ -30,7 +30,7 @@ public class OfferServiceImpl implements OfferService {
 
     @Override
     public Offer get(long id) {
-        return offerRepository.findById(id).get();
+        return offerRepository.getOne(id);
     }
 
     @Override

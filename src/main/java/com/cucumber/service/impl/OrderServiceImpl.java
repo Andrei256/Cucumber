@@ -32,7 +32,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Order get(long id) {
-        return orderRepository.findById(id).get();
+        return orderRepository.getOne(id);
     }
 
     @Override
@@ -70,7 +70,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     public void editOrderState(long id, State state) {
-        Order order = orderRepository.findById(id).get();
+        Order order = orderRepository.getOne(id);
         order.setDateOfAction(LocalDate.now());
         order.setState(state);
         orderRepository.save(order);

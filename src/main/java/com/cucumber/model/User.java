@@ -30,6 +30,7 @@ public class User implements UserDetails {
     @Column(name = "activation_code")
     private String activationCode;
 
+/*    @EqualsAndHashCode.Exclude
     @OneToOne(mappedBy = "buyer")
     private Basket basket;
 
@@ -39,7 +40,11 @@ public class User implements UserDetails {
 
     @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "buyer")
-    private List<Order> ordersForBuyer;
+    private List<Order> orders;*/
+
+    @EqualsAndHashCode.Exclude
+    @OneToMany(mappedBy = "seller")
+    private List<Review> reviews;
 
 
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)

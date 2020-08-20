@@ -15,7 +15,8 @@
                     <td th:if="${offer.product.filename == null}">
                         <img width="50" height="50" th:src="@{'/img/noPhoto.png'}">
                     </td>
-                    <td th:text="${offer.product.modelName}">
+                    <td>
+                        <a th:href="@{'/user/' + ${offer.seller.id}}" th:text="${offer.seller.username}"></a>
                     </td>
                     <td th:text="${offer.cost}"></td>
                 </tr>

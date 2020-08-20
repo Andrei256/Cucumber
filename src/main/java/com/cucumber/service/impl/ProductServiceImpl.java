@@ -12,10 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @Transactional
@@ -39,7 +36,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product get(long id) {
-        return productRepository.findById(id).get();
+        return productRepository.getOne(id);
     }
 
     @Override
@@ -57,15 +54,11 @@ public class ProductServiceImpl implements ProductService {
         Map<Product, Float> productsMap = new HashMap<>();
         for (Product product : productRepository.findByActiveIsTrue()) {
             if (!product.getOffers().isEmpty()) {
-                float num;
-                float min = product.getOffers().get(0).getCost();
-                for (Offer offer : product.getOffers()) {
-                    num = offer.getCost();
-                    if (num < min) {
-                        min = num;
-                    }
-                }
-                productsMap.put(product, min);
+                productsMap.put(product, product.getOffers()
+                        .stream()
+                        .min(Comparator.comparing(Offer::getCost))
+                        .get()
+                        .getCost());
             } else {
                 productsMap.put(product, null);
             }
@@ -86,7 +79,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void editProduct(long id, Product product, MultipartFile file) throws IOException {
         if (file.isEmpty()) {
-            Product productFromDB = productRepository.findById(id).get();
+            Product productFromDB = productRepository.getOne(id);
             product.setFilename(productFromDB.getFilename());
         } else {
             product.setFilename(addImage(file));
@@ -96,6 +89,23 @@ public class ProductServiceImpl implements ProductService {
         }
         product.setId(id);
         productRepository.save(product);
+    }
+
+    @Override
+    public Map<Product, Float> search(String keyword) {
+        Map<Product, Float> productsMap = new HashMap<>();
+        for (Product product : productRepository.search(keyword)) {
+            if (!product.getOffers().isEmpty()) {
+                productsMap.put(product, product.getOffers()
+                        .stream()
+                        .min(Comparator.comparing(Offer::getCost))
+                        .get()
+                        .getCost());
+            } else {
+                productsMap.put(product, null);
+            }
+        }
+        return productsMap;
     }
 
     private String addImage(MultipartFile file) throws IOException {

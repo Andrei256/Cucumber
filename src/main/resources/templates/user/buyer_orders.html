@@ -21,7 +21,7 @@
                         <a th:text="${order.offer.product.modelName}" th:href="@{'/product/' + ${order.offer.product.id}}"> </a>
                         <p>
                             <a>Магазин - </a>
-                            <a th:text="${order.seller.username}"></a>
+                            <a th:href="@{'/user/' + ${order.offer.seller.id}}" th:text="${order.seller.username}"></a>
                         </p>
                     </td>
                     <td>
@@ -36,6 +36,13 @@
                             <a>Стоимость - </a>
                             <a th:text="${order.cost}"></a>
                         </p>
+                    </td>
+                    <td>
+                        <div th:if="${order.state.toString().equals('COMPLETED')}">
+                            <form th:action="@{'/user/' + ${order.seller.id} + '/review/new'}" method="get">
+                                <input type="submit" value="Оставить отзыв">
+                            </form>
+                        </div>
                     </td>
                 </tr>
             </table>

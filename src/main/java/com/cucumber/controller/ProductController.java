@@ -44,12 +44,19 @@ public class ProductController {
         return "product_page";
     }
 
+    @PostMapping("/search")
+    public String search(
+            @RequestParam String keyword,
+            Model model) {
+        model.addAttribute("productsMap", productService.search(keyword));
+        return "product_search";
+    }
+
     //SHOP
 
     @GetMapping("/new")
     public String showNewProductPage(Model model) {
-        Product product = new Product();
-        model.addAttribute("product", product);
+        model.addAttribute("product", new Product());
         model.addAttribute("categories", Category.values());
         return "shop/new_product";
     }

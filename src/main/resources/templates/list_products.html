@@ -5,6 +5,13 @@
     <title>Список товаров</title>
 </head>
 <body>
+    <div align="center">
+        <form th:action="@{'/product/search'}" method="post">
+            <input type="text" name="keyword"/> &nbsp;
+            <input type="submit" value="Поиск">
+        </form>
+    </div>
+    <br/>
     <div th:if="${productsMap.isEmpty()}" align="center">
         <p>Упс! Что-то пошло не так.</p>
     </div>
@@ -18,7 +25,7 @@
                         <img th:src="@{'/img/noPhoto.png'}">
                     </td>
                     <td>
-                        <a th:href="@{'/product/' + ${productMap.key.id}}" th:text="${productMap.key.modelName}">Name</a>
+                        <a th:href="@{'/product/' + ${productMap.key.id}}" th:text="${productMap.key.modelName}"></a>
                         <p th:text="${productMap.key.description}"></p>
                     </td>
                     <td>

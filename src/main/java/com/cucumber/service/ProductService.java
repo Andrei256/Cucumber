@@ -16,4 +16,5 @@ public interface ProductService {
     Map<Product, Float> getAllWhereActiveIsTrueAndMinCost();
     boolean addProduct(Product product, MultipartFile file) throws IOException;
     void editProduct(long id, Product product, MultipartFile file) throws IOException;
+    Map<Product, Float> search(String keyword);
 }

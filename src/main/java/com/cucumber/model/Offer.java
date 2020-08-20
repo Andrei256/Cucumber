@@ -21,6 +21,7 @@ public class Offer {
     @JoinColumn(name = "seller_id")
     private User seller;
 
+    @EqualsAndHashCode.Exclude
     @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
