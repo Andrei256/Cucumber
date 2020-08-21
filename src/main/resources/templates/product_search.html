@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Поиск товаров</title>
+</head>
+<body>
+<div align="center">
+    <form th:action="@{'/product/search'}" method="post">
+        <input type="text" name="keyword"/> &nbsp;
+        <input type="submit" value="Поиск">
+    </form>
+</div>
+<br/>
+<div th:if="${productsMap.isEmpty()}" align="center">
+    <p>Упс! Что-то пошло не так.</p>
+</div>
+<div th:if="${!productsMap.isEmpty()}" align="center">
+    <table border="1" cellpadding="10">
+        <tr th:each="productMap : ${productsMap}">
+            <td th:if="${productMap.key.filename != null}">
+                <img th:src="@{'/img/' + ${productMap.key.filename}}">
+            </td>
+            <td th:if="${productMap.key.filename == null}">
+                <img th:src="@{'/img/noPhoto.png'}">
+            </td>
+            <td>
+                <a th:href="@{'/product/' + ${productMap.key.id}}" th:text="${productMap.key.modelName}"></a>
+                <p th:text="${productMap.key.description}"></p>
+            </td>
+            <td>
+                <div th:if="${productMap.value != null}">
+                    <p th:text="'от ' + ${productMap.value}"></p>
+                </div>
+                <div th:if="${productMap.value == null}">
+                    <p>Нет предложений</p>
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>
+</body>
+</html>

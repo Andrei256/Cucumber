@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Результаты поиска</title>
+</head>
+<body>
+<div align="center">
+    <form th:action="@{'/user/search'}" method="post">
+        <input type="text" name="keyword"/> &nbsp;
+        <input type="submit" value="Поиск">
+    </form>
+</div>
+<br/>
+<div th:if="${listUsers.isEmpty()}" align="center">
+    <p>Нет таких :(</p>
+</div>
+<div th:if="${!listUsers.isEmpty()}" align="center">
+    <table border="1" cellpadding="10">
+        <tr><th>Id</th><th>Имя</th><th>Роль</th><th>Статус</th><th>Действие</th></tr>
+        <tr th:each="user : ${listUsers}">
+            <td th:text="${user.id}"></td>
+            <td>
+                <a th:href="@{'/user/' + ${user.id} + '/adminEdit'}" th:text="${user.username}"></a>
+            </td>
+            <td>
+                <p th:each="role : ${user.roles}">
+                    <a th:text="${role}"></a>
+                </p>
+            </td>
+            <td>
+                <p th:if="${user.active}">Активен</p>
+                <p th:if="${!user.active}">Заблокирован</p>
+            </td>
+            <td>
+                <form th:if="${user.active}" th:action="@{'/user/' + ${user.id} + '/active'}" method="post">
+                    <input type="hidden" name="active" value="false">
+                    <input type="submit" value="Заблокировать" >
+                </form>
+                <form th:if="${!user.active}" th:action="@{'/user/' + ${user.id} + '/active'}" method="post">
+                    <input type="hidden" name="active" value="true">
+                    <input type="submit" value="Разблокировать" >
+                </form>
+            </td>
+        </tr>
+    </table>
+</div>
+</body>
+</html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${user.username}"></title>
+</head>
+<body>
+    <div align="center">
+        <form th:action="@{'/user/' + ${user.id} + '/adminEdit/'}" method="post">
+            <table>
+                <tr>
+                    <td>Id: </td>
+                    <td th:text="${user.id}"></td>
+                </tr>
+                <tr>
+                    <td>Имя пользователя: </td>
+                    <td th:text="${user.username}"></td>
+                </tr>
+                <tr>
+                    <td>Email: </td>
+                    <td th:text="${user.email}"></td>
+                </tr>
+                <tr th:if="${user.phoneNumber != null}">
+                    <td>Номер телефона: </td>
+                    <td th:text="${user.phoneNumber}"></td>
+                </tr>
+                <tr>
+                    <td>Роль: </td>
+                    <td>
+                        <a th:each="role : ${roles}">
+                            <input type="radio" th:name="roles" th:text="${role}" th:value="${role}" th:checked="${#sets.contains(user.roles, role)}?'checked':'no'">
+                        </a>
+                    </td>
+                </tr>
+                <tr th:if="${user.text != null}">
+                    <td>Описание: </td>
+                    <td th:text="${user.text}"></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td><input type="submit" value="Изменить"></td>
+                </tr>
+            </table>
+        </form>
+            <h4 th:if="${user.reviews.isEmpty()}">У магазина нет отзывов</h4>
+            <div th:if="${!user.reviews.isEmpty()}">
+                <h4>Отзывы</h4>
+                <table>
+                    <tr th:each="review : ${user.reviews}">
+                        <td>
+                            <h4 th:text="${review.buyer.username}"></h4>
+                        </td>
+                        <td>
+                            <h3 th:text="${review.heading}"></h3>
+                            <p th:text="${review.text}"></p>
+                        </td>
+                        <td>
+                            <form th:action="@{'/user/' + ${user.id} + '/review/' + ${review.id} + '/delete'}" method="post">
+                                <input type="submit" value="Удалить">
+                            </form>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+    </div>
+</body>
+</html>

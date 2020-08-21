@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Оставить отзыв</title>
+</head>
+<body>
+    <div align="center">
+        <h3>Ваш отзыв о работе магазина</h3>
+        <form th:action="@{'/user/' + ${sellerId} + '/review/add' }" th:object="${review}" method="post">
+            <p><input type="text" th:field="*{heading}" placeholder="Заголовок"></p>
+            <p><textarea rows="8"  cols="80" name="text" th:field="*{text}"></textarea></p>
+            <input type="submit" value="Отправить отзыв">
+        </form>
+    </div>
+</body>
+</html>

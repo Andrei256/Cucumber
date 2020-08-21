@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Моя страница</title>
+</head>
+<body>
+<div align="center">
+<!--    <div th:checked="${#sets.contains(user.roles, )}"></div>-->
+
+    <div th:each="role : ${user.roles}" >
+        <p th:if="${role.toString() == 'USER'}">
+            <a href="/basket">Корзина</a>
+            <a href="/order/history">История заказов</a>
+        </p>
+        <p th:if="${role.toString() == 'SHOP'}">
+            <a href="/product/new">Добавить товар</a>
+            <a href="/order/active">Заказы</a>
+            <a href="/offer/all">Наши предложения</a>
+        </p>
+        <p th:if="${role.toString() == 'ADMIN'}">
+            <a href="/user">Список пользователей</a>
+            <a href="/product/fromSellers/new">Список предложений по товарам</a>
+        </p>
+    </div>
+    <br/>
+        <table>
+            <tr>
+                <td>Имя : </td>
+                <td th:text="${user.username}"></td>
+            </tr>
+            <tr>
+                <td>Email: </td>
+                <td th:text="${user.email}"></td>
+            </tr>
+            <tr th:if="${user.phoneNumber != null}">
+                <td>Номер телефона: </td>
+                <td th:text="${user.phoneNumber}"></td>
+            </tr>
+            <tr th:if="${user.text != null}">
+                <td>Описание: </td>
+                <td th:text="${user.text}"></td>
+            </tr>
+        </table>
+    <br/>
+    <form th:action="@{'/user/' + ${user.id} + '/edit'}" method="get">
+        <input type="submit" value="Редактировать данные">
+    </form>
+    <br/>
+    <div th:each="role : ${user.roles}" th:if="${role.toString() == 'USER'}">
+        <form th:action="@{'/user/' + ${user.id} + '/shopOpen'}" method="get">
+            <input type="submit" value="Открыть магазин">
+        </form>
+    </div>
+    <div th:each="role : ${user.roles}">
+        <div  th:if="${role.toString() == 'SHOP'}">
+
+            <h4 th:if="${user.reviews.isEmpty()}">У магазина нет отзывов</h4>
+            <div th:if="${!user.reviews.isEmpty()}">
+                <h4>Отзывы</h4>
+                <table>
+                    <tr th:each="review : ${user.reviews}">
+                        <td>
+                            <h4 th:text="${review.buyer.username}"></h4>
+                        </td>
+                        <td>
+                            <h3 th:text="${review.heading}"></h3>
+
+                            <p th:text="${review.text}"></p>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+        </div>
+    </div>
+</div>
+</body>
+</html>
