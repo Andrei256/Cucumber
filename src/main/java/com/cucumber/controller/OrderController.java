@@ -1,26 +1,33 @@
 package com.cucumber.controller;
 
-import com.cucumber.model.Basket;
-import com.cucumber.model.Order;
-import com.cucumber.model.State;
-import com.cucumber.model.User;
+import com.cucumber.model.*;
 import com.cucumber.service.BasketService;
 import com.cucumber.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/order")
 public class OrderController {
 
-    @Autowired
     private OrderService orderService;
+    private BasketService basketService;
 
     @Autowired
-    private BasketService basketService;
+    public OrderController(OrderService orderService, BasketService basketService) {
+        this.orderService = orderService;
+        this.basketService = basketService;
+    }
 
     //USER
 
@@ -36,15 +43,21 @@ public class OrderController {
     @PostMapping("/add")
     public String addOrder(
             @AuthenticationPrincipal User buyer,
-            @RequestParam("address") String address,
-            @RequestParam("phoneNumber") String phoneNumber
+            @Valid Order order,
+            BindingResult bindingResult,
+            Model model
     ) {
-        Basket basket = basketService.getBasket(buyer);
-        if (orderService.addOrder(basket, phoneNumber, address)) {
-            basketService.delete(basket.getId());
-            return "redirect:/product";
+        if (bindingResult.hasErrors()) {
+            Map<String, String> errors = ControllerUtils.getErrors(bindingResult);
+            model.addAttribute("errors", errors);
+            model.addAttribute("basket", basketService.getBasket(buyer));
+            model.addAttribute("order", order);
+            return "user/order";
         }
-        return "redirect:/basket";
+        Basket basket = basketService.getBasket(buyer);
+        orderService.addOrder(basket, order);
+        basketService.delete(basket.getId());
+        return "redirect:/order/history";
     }
 
     @GetMapping("/history")
@@ -63,7 +76,7 @@ public class OrderController {
             @PathVariable("state") String state,
             Model model) {
         model.addAttribute("listOrders", orderService.getSellerOrders(seller.getId(), State.valueOf(state.toUpperCase())));
-//        model.addAttribute("states", State.values());
+        model.addAttribute("states", State.values());
         return "shop/seller_orders";
     }
 

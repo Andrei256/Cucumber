@@ -4,6 +4,7 @@ import com.cucumber.model.Offer;
 import com.cucumber.model.Product;
 import com.cucumber.repository.ProductRepository;
 import com.cucumber.service.ProductService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -16,13 +17,18 @@ import java.util.*;
 
 @Service
 @Transactional
+@Slf4j
 public class ProductServiceImpl implements ProductService {
-
-    @Autowired
-    private ProductRepository productRepository;
 
     @Value("${upload.path}")
     private String uploadPath;
+
+    private ProductRepository productRepository;
+
+    @Autowired
+    public ProductServiceImpl(ProductRepository productRepository) {
+        this.productRepository = productRepository;
+    }
 
     @Override
     public void save(Product product) {
@@ -50,8 +56,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Map<Product, Float> getAllWhereActiveIsTrueAndMinCost() {
-        Map<Product, Float> productsMap = new HashMap<>();
+    public Map<Product, Integer> getAllWhereActiveIsTrueAndMinCost() {
+        Map<Product, Integer> productsMap = new HashMap<>();
         for (Product product : productRepository.findByActiveIsTrue()) {
             if (!product.getOffers().isEmpty()) {
                 productsMap.put(product, product.getOffers()
@@ -67,13 +73,12 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public boolean addProduct(Product product, MultipartFile file) throws IOException {
+    public void addProduct(Product product, MultipartFile file) throws IOException {
         if (productRepository.findByModelName(product.getModelName()) == null) {
             product.setFilename(addImage(file));
             productRepository.save(product);
-            return true;
+            log.info("Product was added: " + product);
         }
-        return false;
     }
 
     @Override
@@ -89,11 +94,12 @@ public class ProductServiceImpl implements ProductService {
         }
         product.setId(id);
         productRepository.save(product);
+        log.info("Product was edited: " + product);
     }
 
     @Override
-    public Map<Product, Float> search(String keyword) {
-        Map<Product, Float> productsMap = new HashMap<>();
+    public Map<Product, Integer> search(String keyword) {
+        Map<Product, Integer> productsMap = new HashMap<>();
         for (Product product : productRepository.search(keyword)) {
             if (!product.getOffers().isEmpty()) {
                 productsMap.put(product, product.getOffers()
@@ -111,11 +117,9 @@ public class ProductServiceImpl implements ProductService {
     private String addImage(MultipartFile file) throws IOException {
         if (file != null && !file.getOriginalFilename().isEmpty()) {
             File uploadDir = new File(uploadPath);
-
             if (!uploadDir.exists()) {
                 uploadDir.mkdir();
             }
-
             String uuidFile = UUID.randomUUID().toString();
             String resultFilename = uuidFile + "." + file.getOriginalFilename();
             file.transferTo(new File(uploadPath + "/" + resultFilename));

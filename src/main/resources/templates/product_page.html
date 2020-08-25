@@ -1,12 +1,16 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <title th:text="${product.modelName}"></title>
 </head>
 <body>
+<header th:insert="blocks/header :: header"></header>
 <h2 th:text="${product.modelName}"></h2>
-    <table>
+    <table cellpadding="10">
         <tr>
             <td></td>
             <td th:if="${product.filename != null}">
@@ -24,7 +28,7 @@
             <td>Описание:</td>
             <td th:text="${product.description}"></td>
         </tr>
-        <tr>
+        <tr th:each="role : ${basket.buyer.roles}" th:if="${role.toString() == 'SHOP'}">
             <td></td>
             <td>
                 <form th:action="@{'/product/' + ${product.id} + '/offer/new'}" method="get">
@@ -33,8 +37,9 @@
             </td>
         </tr>
     </table>
+<br>
 <p>Предложения магазинов</p>
-<table>
+<table cellpadding="10">
     <tr th:each="offer : ${product.offers}">
         <td>
             <a th:href="@{'/user/' + ${offer.seller.id}}" th:text="${offer.seller.username}"></a>
@@ -44,10 +49,12 @@
         </td>
         <td>
             <p th:text="${offer.cost}"></p>
-            <form th:action="@{'/basket/' + ${basket.id} + '/add'}" method="post">
-                <input type="hidden" name="offerId" th:value="${offer.id}">
-                <input type="submit" value="В корзину">
-            </form>
+            <div th:each="role : ${basket.buyer.roles}" th:if="${role.toString() == 'USER'}">
+                <form th:action="@{'/basket/' + ${basket.id} + '/add'}" method="post">
+                    <input type="hidden" name="offerId" th:value="${offer.id}">
+                    <input type="submit" value="В корзину">
+                </form>
+            </div>
         </td>
         <td>
             <p>Контакты</p>

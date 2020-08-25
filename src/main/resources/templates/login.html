@@ -8,17 +8,18 @@
     <title>Авторизация</title>
 </head>
 <body>
-    <h2 align="center">Авторизируйтесь</h2>
+
     <div align="center">
+        <h2>Авторизируйтесь</h2>
         <form th:action="@{/login}" method="post">
             <p><input type="text" name="username" placeholder="Имя пользователя"></p>
             <p><input type="password" name="password" placeholder="Пароль"></p>
             <p><input type="submit" value="Войти"></p>
-            <p><a href="/user/registration">Зарегистрироваться</a></p>
         </form>
-        <div th:if="${param.error}">
+        <div class="alert alert-danger" th:if="${param.error}">
             Неправильное имя пользователя или пароль.
         </div>
+        <p><a href="/user/registration">Зарегистрироваться</a></p>
     </div>
 </body>
 </html>

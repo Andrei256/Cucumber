@@ -1,32 +1,34 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <title>Моя страница</title>
 </head>
 <body>
+<header th:insert="blocks/header :: header"></header>
 <div align="center">
-<!--    <div th:checked="${#sets.contains(user.roles, )}"></div>-->
-
     <div th:each="role : ${user.roles}" >
-        <p th:if="${role.toString() == 'USER'}">
+        <p th:if="${{role}} == 'USER'">
             <a href="/basket">Корзина</a>
             <a href="/order/history">История заказов</a>
         </p>
-        <p th:if="${role.toString() == 'SHOP'}">
+        <p th:if="${{role}} == 'SHOP'">
             <a href="/product/new">Добавить товар</a>
             <a href="/order/active">Заказы</a>
             <a href="/offer/all">Наши предложения</a>
         </p>
-        <p th:if="${role.toString() == 'ADMIN'}">
+        <p th:if="${{role}} == 'ADMIN'">
             <a href="/user">Список пользователей</a>
             <a href="/product/fromSellers/new">Список предложений по товарам</a>
         </p>
     </div>
     <br/>
-        <table>
+        <table cellpadding="10">
             <tr>
-                <td>Имя : </td>
+                <td>Имя: </td>
                 <td th:text="${user.username}"></td>
             </tr>
             <tr>
@@ -47,31 +49,29 @@
         <input type="submit" value="Редактировать данные">
     </form>
     <br/>
-    <div th:each="role : ${user.roles}" th:if="${role.toString() == 'USER'}">
+    <div th:each="role : ${user.roles}" th:if="${{role}} == 'USER'">
         <form th:action="@{'/user/' + ${user.id} + '/shopOpen'}" method="get">
             <input type="submit" value="Открыть магазин">
         </form>
     </div>
     <div th:each="role : ${user.roles}">
-        <div  th:if="${role.toString() == 'SHOP'}">
-
-            <h4 th:if="${user.reviews.isEmpty()}">У магазина нет отзывов</h4>
+        <div  th:if="${{role}} == 'SHOP'">
+            <h5 th:if="${user.reviews.isEmpty()}">У магазина нет отзывов</h5>
             <div th:if="${!user.reviews.isEmpty()}">
-                <h4>Отзывы</h4>
-                <table>
+                <h5>Отзывы</h5>
+                <table cellpadding="10">
                     <tr th:each="review : ${user.reviews}">
                         <td>
-                            <h4 th:text="${review.buyer.username}"></h4>
+                            <h5 th:text="${review.buyer.username}"></h5>
                         </td>
                         <td>
-                            <h3 th:text="${review.heading}"></h3>
+                            <h5 th:text="${review.heading}"></h5>
 
                             <p th:text="${review.text}"></p>
                         </td>
                     </tr>
                 </table>
             </div>
-
         </div>
     </div>
 </div>

@@ -1,6 +1,7 @@
 package com.cucumber.controller;
 
 import com.cucumber.model.Category;
+import com.cucumber.model.Offer;
 import com.cucumber.model.Product;
 import com.cucumber.model.User;
 import com.cucumber.service.BasketService;
@@ -10,23 +11,28 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
 import java.io.IOException;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/product")
 public class ProductController {
 
-    @Autowired
     private ProductService productService;
-
-    @Autowired
     private OfferService offerService;
+    private BasketService basketService;
 
     @Autowired
-    private BasketService basketService;
+    public ProductController(ProductService productService, OfferService offerService, BasketService basketService) {
+        this.productService = productService;
+        this.offerService = offerService;
+        this.basketService = basketService;
+    }
 
     @GetMapping
     public String showListProductsPage(Model model) {
@@ -63,19 +69,28 @@ public class ProductController {
 
     @PostMapping("/add")
     public String addNewProduct(
-            @ModelAttribute("product") Product product,
-            @RequestParam("file") MultipartFile file
+            @RequestParam("file") MultipartFile file,
+            @Valid Product product,
+            BindingResult bindingResult,
+            Model model
     ) throws IOException {
-        if (productService.addProduct(product, file)) {
-            return "redirect:/product";
+        if (bindingResult.hasErrors()){
+            Map<String, String> errors = ControllerUtils.getErrors(bindingResult);
+            model.addAttribute("errors", errors);
+            model.addAttribute("product", product);
+            model.addAttribute("categories", Category.values());
+            return "shop/new_product";
         }
-        return "redirect:/product/new";
+        productService.addProduct(product, file);
+        return "redirect:/product";
     }
 
     @GetMapping("/{productId}/offer/new")
     public String showPageForAddProductOffer(
+            @AuthenticationPrincipal User seller,
             @PathVariable(name = "productId") long productId,
             Model model) {
+        model.addAttribute("offer", offerService.getBySellerIdAndProductId(seller.getId(), productId));
         model.addAttribute("product", productService.get(productId));
         return "shop/new_offer";
     }
@@ -83,9 +98,19 @@ public class ProductController {
     @PostMapping("/{productId}/offer/add")
     public String addProductOffer(
             @AuthenticationPrincipal User seller,
-            @RequestParam(name = "cost") float cost,
-            @PathVariable(name = "productId") long productId) {
-        offerService.addOffer(seller, cost, productService.get(productId));
+            @PathVariable(name = "productId") long productId,
+            @Valid Offer offer,
+            BindingResult bindingResult,
+            Model model
+            ) {
+        if (bindingResult.hasErrors()) {
+            Map<String, String> errors = ControllerUtils.getErrors(bindingResult);
+            model.addAttribute("errors", errors);
+            model.addAttribute("offer", offer);
+            model.addAttribute("product", productService.get(productId));
+            return "shop/new_offer";
+        }
+        offerService.addOffer(seller, offer, productService.get(productId));
         return "redirect:/product/" + productId;
     }
 
@@ -126,7 +151,7 @@ public class ProductController {
     }
 
     @PostMapping("/{productId}/delete")
-    public String deleteProductFromBasket(@PathVariable("productId") long productId) {
+    public String deleteProductFromOffersList(@PathVariable("productId") long productId) {
         productService.delete(productId);
         return "redirect:/product/fromSellers/all";
     }

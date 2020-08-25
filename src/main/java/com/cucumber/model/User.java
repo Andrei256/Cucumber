@@ -3,10 +3,14 @@ package com.cucumber.model;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
+import org.hibernate.validator.constraints.Length;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -20,13 +24,25 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
+    @NotBlank(message = "Имя пользователя не может быть пустым")
     private String username;
+
+    @NotBlank(message = "Пароль не может быть пустым")
     private String password;
+
+    @Pattern(regexp = "[A-Za-z0-9._%+-]+[@][A-Za-z0-9.-]+\\.[A-Za-z]{2,4}", message = "Некорректный email")
     private String email;
+
+    @Pattern(regexp = "\\Q+375\\E(\\Q29\\E)?(\\Q33\\E)?(\\Q44\\E)?(\\Q25\\E)?[0-9]{7}", message = "Некорректный номер телефона")
     @Column(name = "phone_number")
     private String phoneNumber;
+
+    @Length(max = 2048, message = "Поле слишком длинное(Больше 2048 знаков)")
     private String text;
+
     private boolean active;
+
     @Column(name = "activation_code")
     private String activationCode;
 
@@ -43,7 +59,8 @@ public class User implements UserDetails {
     private List<Order> orders;*/
 
     @EqualsAndHashCode.Exclude
-    @OneToMany(mappedBy = "seller")
+    @ToString.Exclude
+    @OneToMany(mappedBy = "seller", cascade = CascadeType.ALL)
     private List<Review> reviews;
 
 

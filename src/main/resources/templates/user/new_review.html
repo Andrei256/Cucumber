@@ -1,15 +1,35 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <title>Оставить отзыв</title>
 </head>
 <body>
+<header th:insert="blocks/header :: header"></header>
     <div align="center">
         <h3>Ваш отзыв о работе магазина</h3>
         <form th:action="@{'/user/' + ${sellerId} + '/review/add' }" th:object="${review}" method="post">
-            <p><input type="text" th:field="*{heading}" placeholder="Заголовок"></p>
-            <p><textarea rows="8"  cols="80" name="text" th:field="*{text}"></textarea></p>
+            <table cellpadding="10">
+                <tr>
+                    <td>
+                        <input type="text" th:class="'form-control' + (${errors != null && !errors.isEmpty() && #maps.containsKey(errors, 'headingError')}? ' is-invalid')" th:field="*{heading}" placeholder="Заголовок">
+                        <div th:if="${errors != null && !errors.isEmpty() && #maps.containsKey(errors, 'headingError')}" class="invalid-feedback">
+                            <p th:text="${errors.get('headingError')}"></p>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <textarea rows="8" cols="80" name="text" th:class="'form-control' + (${errors != null && !errors.isEmpty() && #maps.containsKey(errors, 'textError')}? ' is-invalid')" th:field="*{text}"></textarea>
+                        <div th:if="${errors != null && !errors.isEmpty() && #maps.containsKey(errors, 'textError')}" class="invalid-feedback">
+                            <p th:text="${errors.get('textError')}"></p>
+                        </div>
+                    </td>
+                </tr>
+            </table>
             <input type="submit" value="Отправить отзыв">
         </form>
     </div>

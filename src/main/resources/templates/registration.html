@@ -7,19 +7,45 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <title>Регистрация</title>
 </head>
-<h2 align="center">Зарегистрируйтесь</h2>
 <body>
     <div align="center">
-        <form th:action="@{/user/registration}" method="post">
-            <p><input type="text" name="username" placeholder="Имя пользователя"></p>
-            <p><input type="email" name="email" placeholder="some@some.com"></p>
-            <p><input type="password" name="password" placeholder="Пароль"></p>
-            <p><input type="submit" value="Регистрация"></p>
-            <div th:if="${massage != null}">
-                <p th:text="${massage}"></p>
-            </div>
-            <p><a href="/login">Авторизироваться</a></p>
+        <h2>Зарегистрируйтесь</h2>
+        <form th:action="@{/user/registration}" th:object="${user}" method="post">
+            <table cellpadding="5">
+                <tr>
+                    <td>
+                        <input type="text" th:class="'form-control' + (${errors != null && !errors.isEmpty() && #maps.containsKey(errors, 'usernameError') || massage != null}? ' is-invalid')" th:field="*{username}" placeholder="Имя пользователя">
+                        <div th:if="${errors != null && !errors.isEmpty() && #maps.containsKey(errors, 'usernameError')}" class="invalid-feedback">
+                            <p th:text="${errors.get('usernameError')}"></p>
+                        </div>
+                        <div class="invalid-feedback" th:if="${massage != null}">
+                            <p th:text="${massage}"></p>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="email" th:class="'form-control' + (${errors != null && !errors.isEmpty() && #maps.containsKey(errors, 'emailError')}? ' is-invalid')" th:field="*{email}" placeholder="some@some.com">
+                        <div th:if="${errors != null && !errors.isEmpty() && #maps.containsKey(errors, 'emailError')}" class="invalid-feedback">
+                            <p th:text="${errors.get('emailError')}"></p>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="password" th:class="'form-control' + (${errors != null && !errors.isEmpty() && #maps.containsKey(errors, 'passwordError')}? ' is-invalid')" th:field="*{password}" placeholder="Пароль">
+                        <div th:if="${errors != null && !errors.isEmpty() && #maps.containsKey(errors, 'passwordError')}" class="invalid-feedback">
+                            <p th:text="${errors.get('passwordError')}"></p>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+                <p><input type="submit" value="Регистрация"></p>
         </form>
+        <div th:if="${massage != null}">
+            <p th:text="${massage}"></p>
+        </div>
+        <p><a href="/login">Авторизироваться</a></p>
     </div>
 </body>
 </html>

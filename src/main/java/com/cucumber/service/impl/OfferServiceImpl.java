@@ -5,6 +5,7 @@ import com.cucumber.model.Product;
 import com.cucumber.model.User;
 import com.cucumber.repository.OfferRepository;
 import com.cucumber.service.OfferService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,10 +14,15 @@ import java.util.List;
 
 @Service
 @Transactional
+@Slf4j
 public class OfferServiceImpl implements OfferService {
 
-    @Autowired
     private OfferRepository offerRepository;
+
+    @Autowired
+    public OfferServiceImpl(OfferRepository offerRepository) {
+        this.offerRepository = offerRepository;
+    }
 
     @Override
     public void save(Offer offer) {
@@ -39,22 +45,32 @@ public class OfferServiceImpl implements OfferService {
     }
 
     @Override
-    public void addOffer(User seller, float cost, Product product) {
-        Offer offer = offerRepository.findBySeller_IdAndProduct_Id(seller.getId(), product.getId());
-        if (offer == null) {
-            offer = new Offer();
-            offer.setCost(cost);
+    public void addOffer(User seller, Offer offer, Product product) {
+        Offer offerFromDB = offerRepository.findBySeller_IdAndProduct_Id(seller.getId(), product.getId());
+        if (offerFromDB == null) {
             offer.setProduct(product);
             offer.setSeller(seller);
+            offerRepository.save(offer);
+            log.info("Offer was added: " + offer);
         } else {
-            offer.setCost(cost);
+            offerFromDB.setCost(offer.getCost());
+            offerRepository.save(offerFromDB);
+            log.info("Offer was edited: " + offerFromDB);
         }
-        offerRepository.save(offer);
     }
 
     @Override
     public List<Offer> getAllOffersBySellerId(long id) {
         return offerRepository.findBySeller_Id(id);
+    }
+
+    @Override
+    public Offer getBySellerIdAndProductId(long sellerId, long productId) {
+        Offer offer = offerRepository.findBySeller_IdAndProduct_Id(sellerId, productId);
+        if (offer == null) {
+            return new Offer();
+        }
+        return offer;
     }
 
 }

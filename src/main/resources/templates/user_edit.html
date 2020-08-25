@@ -1,30 +1,53 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <title>Изменить профиль</title>
 </head>
 <body>
+<header th:insert="blocks/header :: header"></header>
 <div align="center">
     <h2>Введите данные</h2>
     <form action="#" th:action="@{'/user/' + ${user.id} + '/edit'}" th:object="${user}" method="post">
-        <table border="1" cellpadding="10">
+        <table cellpadding="10">
             <tr>
-                <td>Имя : </td>
-                <td><input type="text" th:field="*{username}"></td>
+                <td>Имя: </td>
+                <td>
+                    <input type="text" th:class="'form-control' + (${errors != null && !errors.isEmpty() && #maps.containsKey(errors, 'usernameError')}? ' is-invalid')" th:field="*{username}">
+                    <div th:if="${errors != null && !errors.isEmpty() && #maps.containsKey(errors, 'usernameError')}" class="invalid-feedback">
+                        <p th:text="${errors.get('usernameError')}"></p>
+                    </div>
+                </td>
             </tr>
             <tr>
-                <td>Email : </td>
-                <td><input type="text" th:field="*{email}"></td>
+                <td>Email: </td>
+                <td>
+                    <input type="text" th:class="'form-control' + (${errors != null && !errors.isEmpty() && #maps.containsKey(errors, 'emailError')}? ' is-invalid')" th:field="*{email}">
+                    <div th:if="${errors != null && !errors.isEmpty() && #maps.containsKey(errors, 'emailError')}" class="invalid-feedback">
+                        <p th:text="${errors.get('emailError')}"></p>
+                    </div>
             </tr>
             <tr>
                 <td>Номер телефона: </td>
-                <td><input type="text" th:field="*{phoneNumber}"></td>
+                <td>
+                    <input type="text" th:class="'form-control' + (${errors != null && !errors.isEmpty() && #maps.containsKey(errors, 'phoneNumberError')}? ' is-invalid')" th:field="*{phoneNumber}">
+                    <div th:if="${errors != null && !errors.isEmpty() && #maps.containsKey(errors, 'phoneNumberError')}" class="invalid-feedback">
+                        <p th:text="${errors.get('phoneNumberError')}"></p>
+                    </div>
+                </td>
             </tr>
-            <div th:each="role : ${user.roles}" th:if="${role.toString() == 'SHOP'}">
+            <div th:each="role : ${user.roles}" th:if="${{role}} == 'SHOP'">
             <tr>
                 <td>Описание: </td>
-                <td><textarea rows="6" cols="60" th:field="*{text}"></textarea></td>
+                <td>
+                    <textarea rows="6" cols="60" th:class="'form-control' + (${errors != null && !errors.isEmpty() && #maps.containsKey(errors, 'textError')}? ' is-invalid')" th:field="*{text}"></textarea>
+                    <div th:if="${errors != null && !errors.isEmpty() && #maps.containsKey(errors, 'textError')}" class="invalid-feedback">
+                        <p th:text="${errors.get('textError')}"></p>
+                    </div>
+                </td>
             </tr>
             </div>
         </table>

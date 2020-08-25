@@ -15,8 +15,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/offer")
 public class OfferController {
 
+
+    private OfferService offerService;
+
     @Autowired
-    OfferService offerService;
+    public OfferController(OfferService offerService) {
+        this.offerService = offerService;
+    }
+
+    //SHOP
 
     @GetMapping("/all")
     public String showAllShopOffers(

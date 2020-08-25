@@ -1,17 +1,16 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <title>Заказы</title>
 </head>
 <body>
+<header th:insert="blocks/header :: header"></header>
 
-
-    <p align="center">
-        <a href="/order/active">Активные</a>
-        <a href="/order/completed">Выполненные</a>
-        <a href="/order/canceled">Отмененные</a>
-    </p>
+    <p align="center"><a th:each="state : ${states}" th:href="@{'/order/' + ${state.toString().toLowerCase()}}" th:text="${state.name} + ' '"></a></p>
 
 <div align="center" th:if="${listOrders.isEmpty()} ">
     <p>Нет заказов</p>

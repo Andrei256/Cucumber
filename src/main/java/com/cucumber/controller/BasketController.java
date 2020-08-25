@@ -13,22 +13,27 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/basket")
 public class BasketController {
 
-    @Autowired
     private OfferService offerService;
+    private BasketService basketService;
 
     @Autowired
-    private BasketService basketService;
+    public BasketController(OfferService offerService, BasketService basketService) {
+        this.offerService = offerService;
+        this.basketService = basketService;
+    }
 
     @GetMapping
     public String showBasketPage() {
         return "user/basket";
     }
 
+    //USER
+
     @PostMapping("/{basketId}/offer/{offerId}/delete")
     public String deleteProductFromBasket(
             @PathVariable("basketId") long basketId,
             @PathVariable("offerId") long offerId) {
-        basketService.deleteProductFromBasket(offerService.get(offerId), basketId);
+        basketService.deleteOfferFromBasket(offerService.get(offerId), basketId);
         return "redirect:/basket";
     }
 
@@ -37,7 +42,7 @@ public class BasketController {
             @PathVariable("basketId") long basketId,
             @RequestParam("offerId") long offerId
     ) {
-        basketService.addProductInBasket(offerService.get(offerId), basketId);
+        basketService.addOfferInBasket(offerService.get(offerId), basketId);
         return "redirect:/product";
     }
 

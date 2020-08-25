@@ -1,40 +1,49 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <title>Добавить предложение магазина</title>
 </head>
 <body>
+<header th:insert="blocks/header :: header"></header>
 <h2 th:text="${product.modelName}"></h2>
-<table>
-    <tr>
-        <td></td>
-        <td th:if="${product.filename != null}">
-            <img th:src="@{'/img/' + ${product.filename}}">
-        </td>
-        <td th:if="${product.filename == null}">
-            <img th:src="@{'/img/noPhoto.png'}">
-        </td>
-    </tr>
-    <tr>
-        <td>Производитель:</td>
-        <td th:text="${product.manufacturer}"></td>
-    </tr>
-    <tr>
-        <td>Описание:</td>
-        <td th:text="${product.description}"></td>
-    </tr>
-        <form th:action="@{'/product/' + ${product.id} + '/offer/add'}" method="post">
-             <tr>
-                <td>Стоимость:</td>
-                <td><input type="text" name="cost"></td>
-            </tr>
-            <tr>
-                <td>
-                </td>
-                <td><input type="submit" value="Добавить"></td>
-            </tr>
-        </form>
-</table>
+<form th:action="@{'/product/' + ${product.id} + '/offer/add'}" th:object="${offer}" method="post">
+    <table border="1" cellpadding="10">
+        <tr>
+            <td></td>
+            <td th:if="${product.filename != null}">
+                <img th:src="@{'/img/' + ${product.filename}}">
+            </td>
+            <td th:if="${product.filename == null}">
+                <img th:src="@{'/img/noPhoto.png'}">
+            </td>
+        </tr>
+        <tr>
+            <td>Производитель:</td>
+            <td th:text="${product.manufacturer}"></td>
+        </tr>
+        <tr>
+            <td>Описание:</td>
+            <td th:text="${product.description}"></td>
+        </tr>
+                 <tr>
+                    <td>Стоимость:</td>
+                    <td>
+                        <input type="text" th:class="'form-control' + (${errors != null && !errors.isEmpty() && #maps.containsKey(errors, 'costError')}? ' is-invalid')" th:field="*{cost}">
+                        <div th:if="${errors != null && !errors.isEmpty() && #maps.containsKey(errors, 'costError')}" class="invalid-feedback">
+                            <p th:text="${errors.get('costError')}"></p>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                    </td>
+                    <td><input type="submit" value="Добавить"></td>
+                </tr>
+    </table>
+</form>
 </body>
 </html>

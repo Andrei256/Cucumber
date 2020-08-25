@@ -5,6 +5,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
 
 @Entity
 @Data
@@ -14,7 +15,9 @@ public class Offer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private float cost;
+
+    @Min(value = 1, message = "Некорректая сумма")
+    private int cost;
 
     @EqualsAndHashCode.Exclude
     @ManyToOne(fetch = FetchType.EAGER)

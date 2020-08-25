@@ -5,6 +5,7 @@ import com.cucumber.model.Offer;
 import com.cucumber.model.User;
 import com.cucumber.repository.BasketRepository;
 import com.cucumber.service.BasketService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,10 +14,15 @@ import java.util.List;
 
 @Service
 @Transactional
+@Slf4j
 public class BasketServiceImpl implements BasketService {
 
-    @Autowired
     private BasketRepository basketRepository;
+
+    @Autowired
+    public BasketServiceImpl(BasketRepository basketRepository) {
+        this.basketRepository = basketRepository;
+    }
 
     @Override
     public void save(Basket basket) {
@@ -50,37 +56,35 @@ public class BasketServiceImpl implements BasketService {
     }
 
     @Override
-    public void addProductInBasket(Offer offer, long id) {
+    public void addOfferInBasket(Offer offer, long id) {
         Basket basket = basketRepository.getOne(id);
         List<Offer> offers = basket.getOffers();
         if (!offers.contains(offer)) {
             offers.add(offer);
             basket.setOffers(offers);
-
             float totalCost = 0;
             for (Offer offerIter : offers) {
                 totalCost = totalCost + offerIter.getCost();
             }
             basket.setTotalCost(totalCost);
             basketRepository.save(basket);
+            log.info("Offer was added in basket: " + offer);
         }
     }
 
     @Override
-    public void deleteProductFromBasket(Offer offer, long id) {
+    public void deleteOfferFromBasket(Offer offer, long id) {
         Basket basket = basketRepository.getOne(id);
         List<Offer> offers = basket.getOffers();
         offers.remove(offer);
         basket.setOffers(offers);
-
         float totalCost = 0;
         for (Offer offerIter : offers) {
             totalCost = totalCost + offerIter.getCost();
         }
         basket.setTotalCost(totalCost);
-
         basketRepository.save(basket);
+        log.info("Offer was deleted from basket: " + offer);
     }
-
 
 }

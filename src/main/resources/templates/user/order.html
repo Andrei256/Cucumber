@@ -1,12 +1,16 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <title>Заказ</title>
 </head>
 <body>
+<header th:insert="blocks/header :: header"></header>
     <div align="center">
-        <form th:action="@{/order/add}" method="post">
+        <form th:action="@{/order/add}" th:object="${order}" method="post">
             <table cellpadding="10">
                 <tr th:each="offer : ${basket.offers}">
                     <td th:if="${offer.product.filename != null}">
@@ -30,11 +34,21 @@
             <table cellpadding="10">
                 <tr>
                     <td>Адрес доставки:</td>
-                    <td><textarea rows="4" cols="60" name="address"></textarea></td>
+                    <td>
+                        <textarea rows="4" cols="60" th:class="'form-control' + (${errors != null && !errors.isEmpty() && #maps.containsKey(errors, 'addressError')}? ' is-invalid')" th:field="*{address}"></textarea>
+                        <div th:if="${errors != null && !errors.isEmpty() && #maps.containsKey(errors, 'addressError')}" class="invalid-feedback">
+                            <p th:text="${errors.get('addressError')}"></p>
+                        </div>
+                    </td>
                 </tr>
                 <tr>
                     <td>Контактный номер:</td>
-                    <td><input type="text" name="phoneNumber"></td>
+                    <td>
+                        <input type="text" th:class="'form-control' + (${errors != null && !errors.isEmpty() && #maps.containsKey(errors, 'phoneNumberError')}? ' is-invalid')" th:field="*{phoneNumber}">
+                        <div th:if="${errors != null && !errors.isEmpty() && #maps.containsKey(errors, 'phoneNumberError')}" class="invalid-feedback">
+                            <p th:text="${errors.get('phoneNumberError')}"></p>
+                        </div>
+                    </td>
                 </tr>
             </table>
             <br/>
