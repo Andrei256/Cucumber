@@ -18,9 +18,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class  WebSecurityConfig extends WebSecurityConfigurerAdapter  {
 
     private  UserDetailServiceImpl userDetailServiceImpl;
-
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    private  PasswordEncoder passwordEncoder;
 
     @Autowired
     public WebSecurityConfig(UserDetailServiceImpl userDetailServiceImpl) {
@@ -32,23 +31,21 @@ public class  WebSecurityConfig extends WebSecurityConfigurerAdapter  {
         return new BCryptPasswordEncoder(8);
     }
 
-
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/user/registration").not().fullyAuthenticated()
+                    .antMatchers("/user/registration", "/activate/*").not().fullyAuthenticated()
                 .anyRequest().authenticated()
                 .and()
-                .formLogin()
-                .loginPage("/login")
-                .defaultSuccessUrl("/product")
-                .permitAll()
+                    .formLogin()
+                    .loginPage("/login")
+                    .defaultSuccessUrl("/product")
+                    .permitAll()
                 .and()
-                .logout()
-                .permitAll()
-                .logoutSuccessUrl("/login");
+                    .logout()
+                    .permitAll()
+                    .logoutSuccessUrl("/login");
     }
 
     @Override

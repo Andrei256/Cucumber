@@ -14,12 +14,12 @@
             <table cellpadding="5">
                 <tr>
                     <td>
-                        <input type="text" th:class="'form-control' + (${errors != null && !errors.isEmpty() && #maps.containsKey(errors, 'usernameError') || massage != null}? ' is-invalid')" th:field="*{username}" placeholder="Имя пользователя">
+                        <input type="text" th:class="'form-control' + (${errors != null && !errors.isEmpty() && #maps.containsKey(errors, 'usernameError') || message != null}? ' is-invalid')" th:field="*{username}" placeholder="Имя пользователя">
                         <div th:if="${errors != null && !errors.isEmpty() && #maps.containsKey(errors, 'usernameError')}" class="invalid-feedback">
                             <p th:text="${errors.get('usernameError')}"></p>
                         </div>
-                        <div class="invalid-feedback" th:if="${massage != null}">
-                            <p th:text="${massage}"></p>
+                        <div class="invalid-feedback" th:if="${message != null}">
+                            <p th:text="${message}"></p>
                         </div>
                     </td>
                 </tr>

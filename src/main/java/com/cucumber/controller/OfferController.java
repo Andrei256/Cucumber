@@ -3,6 +3,7 @@ package com.cucumber.controller;
 import com.cucumber.model.User;
 import com.cucumber.service.OfferService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,10 +12,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+@PreAuthorize("hasAuthority('SHOP')")
 @Controller
 @RequestMapping("/offer")
 public class OfferController {
-
 
     private OfferService offerService;
 

@@ -12,4 +12,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     User findByUsername(String username);
     @Query(value = "SELECT u FROM User u WHERE u.username LIKE '%' || :keyword || '%'")
     List<User> search(@Param("keyword") String keyword);
+
+    User findByActivationCode(String code);
 }

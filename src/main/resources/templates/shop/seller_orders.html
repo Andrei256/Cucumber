@@ -10,7 +10,7 @@
 <body>
 <header th:insert="blocks/header :: header"></header>
 
-    <p align="center"><a th:each="state : ${states}" th:href="@{'/order/' + ${state.toString().toLowerCase()}}" th:text="${state.name} + ' '"></a></p>
+    <p align="center"><a th:each="state : ${states}" th:href="@{'/order/' + ${state.toString().toLowerCase()}}" th:text="${state.name} + ' &nbsp;'"></a></p>
 
 <div align="center" th:if="${listOrders.isEmpty()} ">
     <p>Нет заказов</p>

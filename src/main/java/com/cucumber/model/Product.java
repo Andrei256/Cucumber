@@ -30,7 +30,7 @@ public class Product {
     private String manufacturer;
 
     @NotBlank(message = "Поле не может быть пустым")
-    @Length(max = 1024, message = "Поле слишком длинное(Больше 1024 знаков)")
+    @Length(max = 2048, message = "Поле слишком длинное(Больше 1024 знаков)")
     private String description;
 
     private String filename;

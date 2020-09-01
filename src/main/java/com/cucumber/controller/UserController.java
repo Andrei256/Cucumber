@@ -6,6 +6,7 @@ import com.cucumber.model.User;
 import com.cucumber.service.ReviewService;
 import com.cucumber.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -49,8 +50,22 @@ public class UserController {
         if (userService.addUser(user)) {
             return "redirect:/login";
         }
-        model.addAttribute("massage", "Имя пользователя занято");
+        model.addAttribute("message", "Имя пользователя занято");
         return "registration";
+    }
+
+    @GetMapping("/active/{code}")
+    public String activate(
+            Model model,
+            @PathVariable String code
+    ) {
+        boolean isActivated = userService.activateUser(code);
+        if (isActivated) {
+            model.addAttribute("message", "Пользователь успешно активирован!");
+        } else {
+            model.addAttribute("message", "Код активации не найден!");
+        }
+        return "login";
     }
 
     @GetMapping("/{sellerId}")
@@ -98,6 +113,7 @@ public class UserController {
 
     //USER
 
+    @PreAuthorize("hasAuthority('USER')")
     @GetMapping("/{sellerId}/review/new")
     public String showNewReviewPage(
             Model model,
@@ -108,6 +124,7 @@ public class UserController {
         return "user/new_review";
     }
 
+    @PreAuthorize("hasAuthority('USER')")
     @PostMapping("/{sellerId}/review/add")
     public String addReview(
             @AuthenticationPrincipal User buyer,
@@ -127,7 +144,7 @@ public class UserController {
         return "redirect:/user/" + sellerId;
     }
 
-
+    @PreAuthorize("hasAuthority('USER')")
     @GetMapping("/{userId}/shopOpen")
     public String showShopOpenPage(
             Model model,
@@ -137,6 +154,7 @@ public class UserController {
         return "user/shop_open";
     }
 
+    @PreAuthorize("hasAuthority('USER')")
     @PostMapping("/{userId}/shopOpen")
     public String shopOpen(
             @PathVariable("userId") long userId,
@@ -149,6 +167,7 @@ public class UserController {
 
     //ADMIN
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping
     public String showListUsersPage(
             Model model,
@@ -157,6 +176,7 @@ public class UserController {
         return "admin/list_users";
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/{userId}/adminEdit")
     public String showUserPageForAdmin(
             Model model,
@@ -166,6 +186,7 @@ public class UserController {
         return "admin/user_page_for_admin";
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/{userId}/adminEdit")
     public String editUserRole(
             @PathVariable("userId") long id,
@@ -175,6 +196,7 @@ public class UserController {
         return "redirect:/user";
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/{userId}/active")
     public String editActive(
             @PathVariable("userId") long id,
@@ -184,6 +206,7 @@ public class UserController {
         return "redirect:/user";
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/search")
     public String search(
             @AuthenticationPrincipal User user,
@@ -193,6 +216,7 @@ public class UserController {
         return "admin/users_search";
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/{sellerId}/review/{reviewId}/delete")
     public String deleteReview(
             @PathVariable("reviewId") long reviewId,

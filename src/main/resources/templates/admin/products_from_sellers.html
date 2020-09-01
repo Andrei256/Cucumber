@@ -28,7 +28,7 @@
                 <p th:text="${product.description}">Text</p>
             </td>
             <td>
-                <form th:if="${!product.active}"  th:action="@{'/product/' + ${product.id} + '/delete'}" method="post">
+                <form th:action="@{'/product/' + ${product.id} + '/delete'}" method="post">
                     <input type="submit" value="Удалить">
                 </form>
             </td>

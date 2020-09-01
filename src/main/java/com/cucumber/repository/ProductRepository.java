@@ -1,5 +1,6 @@
 package com.cucumber.repository;
 
+import com.cucumber.model.Category;
 import com.cucumber.model.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -14,6 +15,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findByActiveIsTrue();
 
     List<Product> findByActiveIsFalse();
+
+    List<Product> findByActiveIsTrueAndCategory(Category category);
 
     @Query(value = "SELECT p FROM Product p WHERE p.modelName LIKE '%' || :keyword || '%'"
             + " OR p.description LIKE '%' || :keyword || '%'")

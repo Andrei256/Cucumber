@@ -29,4 +29,6 @@ public interface UserService {
     void editDataForShop(long id, User user);
 
     void editUser(long id, User user);
+
+    boolean activateUser(String code);
 }

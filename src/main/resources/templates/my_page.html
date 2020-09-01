@@ -12,16 +12,16 @@
 <div align="center">
     <div th:each="role : ${user.roles}" >
         <p th:if="${{role}} == 'USER'">
-            <a href="/basket">Корзина</a>
+            <a href="/basket">Корзина</a>&nbsp;
             <a href="/order/history">История заказов</a>
         </p>
         <p th:if="${{role}} == 'SHOP'">
-            <a href="/product/new">Добавить товар</a>
-            <a href="/order/active">Заказы</a>
+            <a href="/product/new">Добавить товар</a>&nbsp;
+            <a href="/order/active">Заказы</a>&nbsp;
             <a href="/offer/all">Наши предложения</a>
         </p>
         <p th:if="${{role}} == 'ADMIN'">
-            <a href="/user">Список пользователей</a>
+            <a href="/user">Список пользователей</a>&nbsp;
             <a href="/product/fromSellers/new">Список предложений по товарам</a>
         </p>
     </div>

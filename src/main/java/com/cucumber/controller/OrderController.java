@@ -4,6 +4,7 @@ import com.cucumber.model.*;
 import com.cucumber.service.BasketService;
 import com.cucumber.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,6 +32,7 @@ public class OrderController {
 
     //USER
 
+    @PreAuthorize("hasAuthority('USER')")
     @GetMapping
     public String showOrderPage(
             @AuthenticationPrincipal User buyer,
@@ -40,6 +42,7 @@ public class OrderController {
         return "user/order";
     }
 
+    @PreAuthorize("hasAuthority('USER')")
     @PostMapping("/add")
     public String addOrder(
             @AuthenticationPrincipal User buyer,
@@ -60,6 +63,7 @@ public class OrderController {
         return "redirect:/order/history";
     }
 
+    @PreAuthorize("hasAuthority('USER')")
     @GetMapping("/history")
     public String showBuyerOrders(
             @AuthenticationPrincipal User buyer,
@@ -70,6 +74,7 @@ public class OrderController {
 
     //SHOP
 
+    @PreAuthorize("hasAuthority('SHOP')")
     @GetMapping("/{state}")
     public String showSellerOrders(
             @AuthenticationPrincipal User seller,
@@ -80,6 +85,7 @@ public class OrderController {
         return "shop/seller_orders";
     }
 
+    @PreAuthorize("hasAuthority('SHOP')")
     @PostMapping("/{orderId}/state")
     public String completeOrder(
             @PathVariable("orderId") long orderId,

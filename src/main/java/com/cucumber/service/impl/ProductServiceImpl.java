@@ -1,5 +1,6 @@
 package com.cucumber.service.impl;
 
+import com.cucumber.model.Category;
 import com.cucumber.model.Offer;
 import com.cucumber.model.Product;
 import com.cucumber.repository.ProductRepository;
@@ -57,19 +58,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Map<Product, Integer> getAllWhereActiveIsTrueAndMinCost() {
-        Map<Product, Integer> productsMap = new HashMap<>();
-        for (Product product : productRepository.findByActiveIsTrue()) {
-            if (!product.getOffers().isEmpty()) {
-                productsMap.put(product, product.getOffers()
-                        .stream()
-                        .min(Comparator.comparing(Offer::getCost))
-                        .get()
-                        .getCost());
-            } else {
-                productsMap.put(product, null);
-            }
-        }
-        return productsMap;
+        return getProductsMapWithMinCost(productRepository.findByActiveIsTrue());
     }
 
     @Override
@@ -99,8 +88,17 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Map<Product, Integer> search(String keyword) {
+        return getProductsMapWithMinCost(productRepository.search(keyword));
+    }
+
+    @Override
+    public Map<Product, Integer> getAllWhereActiveIsTrueAndCategoryAndMinCost(Category category) {
+        return getProductsMapWithMinCost(productRepository.findByActiveIsTrueAndCategory(category));
+    }
+
+    private Map<Product, Integer> getProductsMapWithMinCost(List<Product> productsList) {
         Map<Product, Integer> productsMap = new HashMap<>();
-        for (Product product : productRepository.search(keyword)) {
+        for (Product product : productsList) {
             if (!product.getOffers().isEmpty()) {
                 productsMap.put(product, product.getOffers()
                         .stream()

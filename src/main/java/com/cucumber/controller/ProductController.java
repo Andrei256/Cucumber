@@ -8,6 +8,7 @@ import com.cucumber.service.BasketService;
 import com.cucumber.service.OfferService;
 import com.cucumber.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -40,10 +41,19 @@ public class ProductController {
         return "list_products";
     }
 
+    @GetMapping("/category/{category}")
+    public String showListProductsByCategory(
+            Model model,
+            @PathVariable("category") String category
+            ) {
+        model.addAttribute("productsMap", productService.getAllWhereActiveIsTrueAndCategoryAndMinCost(Category.valueOf(category.toUpperCase())));
+        return "list_products";
+    }
+
     @GetMapping("/{productId}")
     public String showProductPage(
             @AuthenticationPrincipal User buyer,
-            @PathVariable(name = "productId") long productId,
+            @PathVariable("productId") long productId,
             Model model) {
         model.addAttribute("product", productService.get(productId));
         model.addAttribute("basket", basketService.getBasket(buyer));
@@ -60,6 +70,7 @@ public class ProductController {
 
     //SHOP
 
+    @PreAuthorize("hasAuthority('SHOP')")
     @GetMapping("/new")
     public String showNewProductPage(Model model) {
         model.addAttribute("product", new Product());
@@ -67,6 +78,7 @@ public class ProductController {
         return "shop/new_product";
     }
 
+    @PreAuthorize("hasAuthority('SHOP')")
     @PostMapping("/add")
     public String addNewProduct(
             @RequestParam("file") MultipartFile file,
@@ -85,6 +97,7 @@ public class ProductController {
         return "redirect:/product";
     }
 
+    @PreAuthorize("hasAuthority('SHOP')")
     @GetMapping("/{productId}/offer/new")
     public String showPageForAddProductOffer(
             @AuthenticationPrincipal User seller,
@@ -95,6 +108,7 @@ public class ProductController {
         return "shop/new_offer";
     }
 
+    @PreAuthorize("hasAuthority('SHOP')")
     @PostMapping("/{productId}/offer/add")
     public String addProductOffer(
             @AuthenticationPrincipal User seller,
@@ -116,6 +130,7 @@ public class ProductController {
 
     //ADMIN
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/fromSellers/{sort}")
     public String showPageOffersFromSellers(
             @PathVariable("sort") String sort,
@@ -131,6 +146,7 @@ public class ProductController {
         return "admin/products_from_sellers";
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/{productId}/edit")
     public String showEditProductPage(
             @PathVariable("productId") long productId,
@@ -140,6 +156,7 @@ public class ProductController {
         return "admin/edit_product";
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/{productId}/edit")
     public String editProduct(
             @PathVariable("productId") long productId,
@@ -150,6 +167,7 @@ public class ProductController {
         return "redirect:/product/fromSellers/all";
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/{productId}/delete")
     public String deleteProductFromOffersList(@PathVariable("productId") long productId) {
         productService.delete(productId);

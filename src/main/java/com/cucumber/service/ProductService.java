@@ -1,5 +1,6 @@
 package com.cucumber.service;
 
+import com.cucumber.model.Category;
 import com.cucumber.model.Product;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,4 +27,6 @@ public interface ProductService {
     void editProduct(long id, Product product, MultipartFile file) throws IOException;
 
     Map<Product, Integer> search(String keyword);
+
+    Map<Product, Integer> getAllWhereActiveIsTrueAndCategoryAndMinCost(Category category);
 }
